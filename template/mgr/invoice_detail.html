@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>[[${str}]] | 交易发票管理</title>
+<link th:href="@{{sp}/css/bootstrap.min.css(sp=${pub_bucket})}" rel="stylesheet">
+<link th:href="@{{sp}/font-awesome/css/font-awesome.css(sp=${pub_bucket})}" rel="stylesheet">
+<link th:href="@{{sp}/css/animate.css(sp=${pub_bucket})}" rel="stylesheet">
+<link th:href="@{{sp}/css/style.css(sp=${pub_bucket})}" rel="stylesheet">
+<link th:href="|${pub_bucket}/css/plugins/iCheck/custom.css|" rel="stylesheet">
+<link th:href="|${pub_bucket}/css/plugins/jsTree/style.min.css|" rel="stylesheet">
+<link th:href="|${pub_bucket}/css/plugins/sweetalert/sweetalert.css|" rel="stylesheet">
+<link th:href="|${pub_bucket}/css/plugins/ladda/ladda-themeless.min.css|" rel="stylesheet">
+
+<link th:href="|${pub_bucket}/css/plugins/select2/select2.min.css|" rel="stylesheet">
+</head>
+
+<body>
+	<div id="wrapper">
+		<div th:replace="../common/nav"></div>
+		<div id="page-wrapper" class="gray-bg">
+			<div th:replace="../common/top"></div>
+
+			<div class="row wrapper border-bottom white-bg page-heading">
+				<div class="col-lg-6">
+					<h2>[[${trade.tnum}]]</h2>
+					<ol class="breadcrumb">
+						<li><a href="javascript:;">Home</a></li>
+						<li>交易订单</li>
+						<li class="active"><strong>发票信息</strong></li>
+					</ol>
+				</div>
+				<div class="col-lg-3">
+					<div class="title-action">
+						<a href="javascript:;" class="btn btn-white"><i class="fa fa-pencil"></i> [[${select_invoice_set.unit_name}]]-[[${select_invoice_set.unit_tax}]]-[[${select_invoice_set.tax_fee}]]% </a>
+					</div>
+				</div>
+				<div class="col-lg-3">
+					<div class="title-action">
+						<a href="invoice_print.html" target="_blank" class="btn btn-primary"><i class="fa fa-print"></i> 打印发票 </a>
+					</div>
+				</div>
+			</div>
+
+			<div class="row">
+				<div class="col-lg-12">
+					<div class="wrapper wrapper-content animated fadeInRight">
+						<div class="ibox-content p-xl">
+							<div class="row">
+								<div class="col-sm-6">
+									<h5>收款单位信息:</h5>
+									<address>
+										<strong id="unit_name">[[${select_invoice_set.unit_name}]].</strong><br> 
+										<span id="unit_tax">[[${select_invoice_set.unit_tax}]].</span><br> 
+										<span id="unit_addr">[[${select_invoice_set.unit_addr}]]</span><br> 
+										<abbr title="Phone">P:</abbr>
+										<span id="unit_phone">[[${select_invoice_set.unit_phone}]]</span>
+									</address>
+								</div>
+
+								<div class="col-sm-6 text-right">
+									<h4>发票内部编号.</h4>
+									<h4 class="text-navy">INV-[[${invoice.t_id}]]-[[${invoice.id}]]</h4>
+									<span>付款单位信息:</span>
+									<address>
+										<strong id="pay_dis_name">[[${invoice.pay_unit_name}]].</strong><br> 
+										<span id="pay_dis_tax">[[${invoice.pay_unit_tax}]].</span><br> 
+										<span id="pay_dis_addr">[[${invoice.pay_addr}]]</span><br> 
+										<abbr title="Phone">P:</abbr>
+										<span id="pay_dis_phone">[[${invoice.pay_phone}]].</span>
+									</address>
+								</div>
+							</div>
+
+							<div class="table-responsive m-t">
+								<table class="table invoice-table">
+									<thead>
+										<tr>
+											<th>发票明细</th>
+											<th>数量</th>
+											<th>单价</th>
+											<th>税率</th>
+											<th>总价</th>
+										</tr>
+									</thead>
+									<tbody>
+										<tr th:each="st:${trade_orders}">
+											<td>
+												<div>
+													<strong>[[${st.storename}]][[${st.oc}]]</strong>
+												</div> 
+												<small>[[${st.order_num}]]</small>
+											</td>
+											<td>1</td>
+											<td>[[${st.pay_amount/100}]]</td>
+											<td>[[${invoice.is_tax_fee}]]%</td>
+											<td>[[${st.pay_amount/100}]]</td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+							<!-- /table-responsive -->
+
+							<table class="table invoice-total">
+								<tbody>
+									<tr>
+										<td><strong>不含税总价 :</strong></td>
+										<td>¥[[${none_tax_amount/100}]]</td>
+									</tr>
+									<tr>
+										<td><strong>税额 :</strong></td>
+										<td>¥[[${tax_amount/100}]]</td>
+									</tr>
+									<tr>
+										<td><strong>价税合计 :</strong></td>
+										<td>¥[[${total_amount/100}]]</td>
+									</tr>
+								</tbody>
+							</table>
+							<div class="well m-t">
+								<strong>提示</strong> 发票信息请在专用税控发票打印机完成打印操作
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div th:replace="../common/foot"></div>
+		</div>
+	</div>
+	
+	<!-- Mainly scripts -->
+	<script th:src="@{{sp}/js/jquery-2.1.1.js(sp=${pub_bucket})}"></script>
+	<script th:src="@{{sp}/js/bootstrap.min.js(sp=${pub_bucket})}"></script>
+	<script th:src="@{{sp}/js/plugins/metisMenu/jquery.metisMenu.js(sp=${pub_bucket})}"></script>
+	<script th:src="@{{sp}/js/plugins/slimscroll/jquery.slimscroll.min.js(sp=${pub_bucket})}"></script>
+
+	<!-- Custom and plugin javascript -->
+	<script th:src="@{{sp}/js/inspinia.js(sp=${pub_bucket})}"></script>
+	<script th:src="@{{sp}/js/plugins/pace/pace.min.js(sp=${pub_bucket})}"></script>
+	<script th:src="|${pub_bucket}/js/plugins/jsTree/jstree.min.js|"></script>	
+	<script th:src="@{{sp}/third/layer3/layer.js(sp=${pub_bucket})}" type="text/javascript"></script>
+	<script th:src="|${pub_bucket}/js/plugins/sweetalert/sweetalert.min.js|"></script>
+	<!-- iCheck -->
+    <script th:src="|${pub_bucket}/js/plugins/iCheck/icheck.min.js|"></script>
+    
+    <!-- Ladda -->
+    <script th:src="|${pub_bucket}/js/plugins/ladda/spin.min.js|"></script>
+    <script th:src="|${pub_bucket}/js/plugins/ladda/ladda.min.js|"></script>
+    <script th:src="|${pub_bucket}/js/plugins/ladda/ladda.jquery.min.js|"></script>
+    
+    <script th:src="|${pub_bucket}/js/plugins/select2/select2.full.min.js|"></script>
+</body>
+
+<script type="text/javascript" th:inline="javascript">
+var t_id = [[${trade.id}]];
+$(function() {
+	var l = $(".ladda-button").ladda();
+	$('.i-checks').iCheck({
+        checkboxClass: 'icheckbox_square-green',
+        radioClass: 'iradio_square-green',
+    });
+	var check_gs = [];
+	$(".blick_g").on("ifChecked ifUnchecked", function(event) {
+		var id = $(this).attr("attr_id");
+		if (event.type == 'ifChecked') {
+            $(this).iCheck('check');
+            check_gs.push(id);
+        } else {
+        	$(this).iCheck('uncheck');
+        	check_gs.splice($.inArray(id, check_gs), 1);
+        }
+	});
+	$(".batch_for_invoice").on("click", function() {
+		if(check_gs.length==0) {
+			swal({title: "Error", text: "请选择要开票的付款信息", type: "error"});
+			return;
+		}
+		for(x in check_gs) {
+			$(".blick_g").each(function() {
+				if($(this).attr("attr_id")==check_gs[x]&&$(this).attr("pay_type")=='60') {
+					swal({title: "Error", text: "发票不可选择退款类交易", type: "error"});
+					return;
+				}
+			});
+		}
+		//TODO 开始提交发票交易
+		var $this = $(this);
+		$this.ladda('start');
+		var param = {tid:t_id,gs:check_gs.join(',')}
+		location.href = '/trade/mgr/invoice?tid=' + t_id + '&gs=' + check_gs.join(',');
+	});
+	
+	$(".refund").on("click", function() {
+		swal({title: "Error", text: "暂不支持交易订单单独退款", type: "error"});
+	});
+	$(".invoice_sets").select2({placeholder:'选择发票设置'});
+	
+	var select_is_id = 0;
+	$(".invoice_sets").on("change", function() {
+		var $this = $(this).find("option:selected");
+		$("#unit_name").html($this.attr("unit_name"));
+		$("#unit_tax").html($this.attr("unit_tax") + "(税率" + $this.attr("tax_fee") + "%)");
+		$("#unit_addr").html($this.attr("unit_addr"));
+		$("#unit_phone").html($this.attr("unit_phone"));
+		select_is_id = $(this).val();
+	});
+	$(".edit_pay_info").on("click", function() {
+		$("#pay_name").val('');
+		$("#pay_tax").val('');
+		$("#pay_bank").val('');
+		$("#pay_account").val('');
+		$("#pay_addr").val('');
+		$("#pay_phone").val('');
+		layer.open({
+			area : [ '70%', '80%' ],
+			type : 1,
+			content : $("#templatemo-preferences-form")
+		});
+	});
+	
+	$(".pay_info").on("click", function() {
+		var pay_name = $.trim($("#pay_name").val());
+		var pay_tax = $.trim($("#pay_tax").val());
+		var pay_bank = $.trim($("#pay_bank").val());
+		var pay_account = $.trim($("#pay_account").val());
+		var pay_phone = $.trim($("#pay_phone").val());
+		var pay_addr = $.trim($("#pay_addr").val());
+		$("#pay_dis_name").html(pay_name);
+		$("#pay_dis_tax").html(pay_tax);
+		
+		$("#pay_dis_phone").html(pay_phone);
+		$("#pay_dis_addr").html(pay_addr);
+		layer.closeAll();
+	});
+	
+	$(".save_info").on("click", function() {
+		var pay_name = $.trim($("#pay_name").val());
+		var pay_tax = $.trim($("#pay_tax").val());
+		var pay_bank = $.trim($("#pay_bank").val());
+		var pay_account = $.trim($("#pay_account").val());
+		var pay_phone = $.trim($("#pay_phone").val());
+		var pay_addr = $.trim($("#pay_addr").val());
+		var params = {tid:t_id,is_id:select_is_id,pay_name:pay_name,pay_tax:pay_tax,pay_bank:pay_bank,pay_account:pay_account,pay_phone:pay_phone,pay_addr:pay_addr};
+		var $this = $(this);
+		$this.ladda('start');
+		$.post('/trade/mgr/aj/save_invoice', params, function(data) {
+			$this.ladda('stop'); layer.closeAll();
+			if(data.available) {
+				swal({title: "操作成功!", text: "发票信息已保存!", type: "success" }, function() {
+					//location.reload();
+					location.href = '/trade/mgr/invoice_detail?id=' + data.data + '&' + new Date().getTime();
+				});
+			} else {
+				var code = data.messages[0];
+				var msg = '操作失败：' + code;
+				layer.msg(msg, {icon: 2});
+			}
+		});
+	});
+});
+</script>
+
+</html>

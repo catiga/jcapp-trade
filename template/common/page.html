@@ -1,0 +1,127 @@
+<div class="dataTables_paginate paging_simple_numbers" id="DataTables_Table_0_paginate">
+   <ul class="pagination" th:if="${page.totalPages <= 0||page.totalPages ==null||page.totalPages =='' }">
+       <li class="paginate_button"><a href="javascript:;" aria-controls="DataTables_Table_0" data-dt-idx="0" tabindex="0">共0条</a></li>
+       <li class="paginate_button"><a href="javascript:;" aria-controls="DataTables_Table_0" data-dt-idx="0" tabindex="0">共0页</a></li>
+   </ul>
+  <div th:if="${page.totalPages > 0 }">
+	<ul class="pagination">
+		<li class="paginate_button"><a href="javascript:;" aria-controls="DataTables_Table_0" data-dt-idx="0" tabindex="0">共[[${page.totalCount}]]条</a></li>
+		<li class="paginate_button"><a href="javascript:;" aria-controls="DataTables_Table_0" data-dt-idx="0" tabindex="0">共[[${page.totalPages}]]页</a></li>
+	</ul>
+	<ul class="pagination" id="paginate_btn">
+		<li class="paginate_button previous" th:classappend="${page.pre}?'':'disabled'" id="DataTables_Table_0_previous">
+			<a href="javascript:;" class="pre_page">Prev</a>
+		</li>
+	</ul>
+  </div>
+</div>
+<script th:src="|${pub_bucket}/js/jquery-2.1.1.js|"></script>
+<script type="text/javascript">
+/* 
+* url 目标url 
+* arg 需要替换的参数名称 
+* arg_val 替换后的参数的值 
+* return url 参数替换后的url 
+*/ 
+function changeURLArg(url,arg,arg_val){ 
+    var pattern=arg+'=([^&]*)'; 
+    var replaceText=arg+'='+arg_val; 
+    if(url.match(pattern)){ 
+        var tmp='/('+ arg+'=)([^&]*)/gi'; 
+        tmp=url.replace(eval(tmp),replaceText); 
+        return tmp; 
+    }else{ 
+        if(url.match('[\?]')){ 
+            return url+'&'+replaceText; 
+        }else{ 
+            return url+'?'+replaceText; 
+        } 
+    } 
+    return url+'\n'+arg+'\n'+arg_val; 
+}
+
+$(function(){
+	var page_url = window.location.href;
+	var c_p = [[${page.pn}]];
+	var c_pges = [[${page.totalPages}]];
+	var c_pnext = [[${page.next}]];
+	if(c_pges<=10){
+		var html = "";
+		for(var i=1;i<c_pges+1;i++){
+			html += "<li class='paginate_button' th:classappend=\"${" + c_p + "}==${" + i + "}?'active'\">";
+			html += "<a href='javascript:;' class='switch_page'>" + i + "</a>";
+			html += "</li>";
+		}
+		$("#paginate_btn").append(html);
+	}else if(c_pges>10){
+		if(c_p<7){
+			var html = "";
+			for(var i=1;i<11;i++){
+				html += "<li class='paginate_button' th:classappend=\"${" + c_p + "}==${" + i + "}?'active'\">";
+				html += "<a href='javascript:;' class='switch_page'>" + i + "</a>";
+				html += "</li>";
+			}
+			$("#paginate_btn").append(html);
+		}else if(c_p>6&&c_p<c_pges-3){
+			var html = "";
+			for(var i=c_p-5;i<c_p+5;i++){
+				html += "<li class='paginate_button' th:classappend=\"${" + c_p + "}==${" + i + "}?'active'\">";
+				html += "<a href='javascript:;' class='switch_page'>" + i + "</a>";
+				html += "</li>";
+			}
+			$("#paginate_btn").append(html);
+		}else if(c_p>c_pges-4&&c_p<c_pges+1){
+			var html = "";
+			for(var i=c_pges-9;i<c_pges+1;i++){
+				html += "<li class='paginate_button' th:classappend=\"${" + c_p + "}==${" + i + "}?'active'\">";
+				html += "<a href='javascript:;' class='switch_page'>" + i + "</a>";
+				html += "</li>";
+			}
+			$("#paginate_btn").append(html);
+		}
+	}
+    if(c_p<c_pges+1){
+		var html = "";
+		if(c_pnext==true){
+			html += "<li class='paginate_button next' id='DataTables_Table_0_next'>";
+		}else{
+			html += "<li class='paginate_button next disabled' id='DataTables_Table_0_next'>";
+		}
+		html += "<a href='javascript:;' class='next_page'>Next</a>";
+		html += "</li>";
+	}
+	$("#paginate_btn").append(html); 
+	
+	$(".pre_page").on("click", function(){
+		if(c_p<=1) {
+			layer.tips('已经到了第一页', '.pre_page', {
+			    tips: [1, '#3595CC'],
+			    time: 4000
+			});
+		} else {
+			page_url = changeURLArg(page_url, "pn", c_p-1);
+			location.href = page_url;
+		}
+	});
+	
+	$(".next_page").on("click", function(){
+		if($(this).parent().hasClass("disabled")) {
+			layer.tips('已经到了最后一页', '.next_page', {
+			    tips: [1, '#3595CC'],
+			    time: 4000
+			});
+		} else {
+			page_url = changeURLArg(page_url, "pn", c_p+1);
+			location.href = page_url;
+		}
+	});
+	
+	$(".switch_page").on("click", function(){
+		var pn = $(this).html();
+		if(!$(this).parent().hasClass("active")) {
+			page_url = changeURLArg(page_url, "pn", pn);
+			location.href = page_url;
+		}
+	});
+});
+</script>

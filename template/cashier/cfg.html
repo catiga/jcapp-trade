@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>[[${str}]] | 工作台配置</title>
+<link th:href="@{{sp}/css/bootstrap.min.css(sp=${pub_bucket})}" rel="stylesheet">
+<link th:href="@{{sp}/font-awesome/css/font-awesome.css(sp=${pub_bucket})}" rel="stylesheet">
+<link th:href="@{{sp}/css/animate.css(sp=${pub_bucket})}" rel="stylesheet">
+<link th:href="@{{sp}/css/style.css(sp=${pub_bucket})}" rel="stylesheet">
+<link th:href="|${pub_bucket}/css/plugins/iCheck/custom.css|" rel="stylesheet">
+<link th:href="|${pub_bucket}/css/plugins/jsTree/style.min.css|" rel="stylesheet">
+<link th:href="|${pub_bucket}/css/plugins/sweetalert/sweetalert.css|" rel="stylesheet">
+<link th:href="|${pub_bucket}/css/plugins/ladda/ladda-themeless.min.css|" rel="stylesheet">
+
+<link th:href="|${pub_bucket}/css/plugins/select2/select2.min.css|" rel="stylesheet">
+</head>
+
+<body>
+	<div id="wrapper">
+		<div th:replace="../common/nav"></div>
+		<div id="page-wrapper" class="gray-bg">
+			<div th:replace="../common/top"></div>
+			<div class="row wrapper border-bottom white-bg page-heading">
+				<div class="col-sm-4">
+					<h2>[[${counter.name}]]</h2>
+					<ol class="breadcrumb">
+						<li><a href="javascript:;">Home</a></li>
+						<li><a href="/trade/cashier/index">收银台列表</a></li>
+						<li class="active"><strong>配置信息</strong></li>
+					</ol>
+				</div>
+			</div>
+			
+			<div class="row">
+				<div class="col-lg-12 goods_area">
+					<div class="wrapper wrapper-content animated fadeInUp">
+						<div class="ibox">
+							<div class="ibox-title">
+								<h5>系统收银台列表</h5>
+								<div class="ibox-tools">
+									<a href="javascript:void(0)" class="btn btn-primary btn-xs add_counter ladda-button add_ct">添加配置</a>
+								</div>
+							</div>
+							<div class="ibox-content">
+								<div class="table-responsive">
+                                	<table class="table table-striped">
+										<thead>
+		                                    <tr>
+		                                    	<th>#</th>
+												<th>配置类型</th>
+												<th>配置名称</th>
+												<th>参数代码</th>
+												<th>参数详情</th>
+												<th>添加时间</th>
+												<th>操作</th>
+		                                    </tr>
+	                                    </thead>
+										<tbody>
+											<tr th:each="st:${counter_confs}" th:attr_id="${st.id}">
+												<td class="check-mail">
+							                        <input type="checkbox" class="i-checks blick_g" th:attr_id="${st.id}" th:checked="${st.flag==0 }?'checked'">
+							                    </td>
+							                    <td>
+							                    	<span th:if="${st.cft=='100'}">打印机</span>
+							                    </td>
+							                    <td>[[${st.code}]]</td>
+							                    <td>[[${st.name}]]</td>
+							                    <td class="edit_ocs">
+							                    	<div th:if="${st.paraminfo!=null}">
+							                    		<span th:each="ss:${st.paraminfo.oc}" class="badge badge-primary">[[${ss['name']}]]</span>
+							                    	</div>
+							                    	
+							                    </td>
+							                    <td>[[${#dates.format(st.a_time, 'yyyy-MM-dd HH:mm:ss')}]]</td>
+												<td>
+													<button data-style="zoom-in" class="ladda-button btn btn-info btn-sm edit_cf" th:attr_id="${st.id }"><i class="fa fa-ticket"></i> 编辑 </button>
+													<button data-style="zoom-in" class="ladda-button btn btn-danger btn-sm remove_cf" th:attr_id="${st.id }"><i class="fa fa-rub"></i> 删除 </button>
+													
+													<!-- <button th:if="${st.cft=='100'}" data-style="zoom-in" class="ladda-button btn btn-warning btn-sm" th:attr_id="${st.id }"><i class="fa fa-rub"></i> 打印模板 </button> -->
+												</td>
+											</tr>
+										</tbody>
+									</table>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div th:replace="../common/foot"></div>
+		</div>
+	</div>
+	
+	<div id="templatemo-preferences-form" style="display:none;padding-left:15px;padding-right:15px">
+		<div class="row">
+			<div class="col-md-12 margin-bottom-15">
+				<label for="cf_type" class="control-label">配置类型</label>
+				<select class="cf_type form-control margin-bottom-15" name="cf_type" id="cf_type">
+					<option value="100">打印机配置</option>
+				</select>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-md-6 margin-bottom-15">
+				<label class="control-label" for="cf_code">配置编号</label> 
+				<input type="text" class="form-control" id="cf_code" placeholder="请输入编号">
+			</div>
+			<div class="col-md-6 margin-bottom-15">
+				<label for="cf_name" class="control-label">配置名称</label>
+				<input type="text" class="form-control" id="cf_name" placeholder="请输入名称">
+			</div>
+		</div>
+		
+		<div class="row">
+			<div class="col-md-12 margin-bottom-15">
+				<label class="control-label" for="cf_info">配置说明</label> 
+				<textarea class="form-control" id="cf_info" placeholder="配置说明"></textarea>
+			</div>
+		</div>
+		
+		<div class="row templatemo-form-buttons" style="margin-top:15px;">
+			<div class="col-md-12">
+				<input type="hidden" class="form-control" id="cf_id" value="0">
+				<button data-style="zoom-in" class="ladda-button btn btn-primary save_ct" style="width:100%">保存</button>
+			</div>
+		</div>
+	</div>
+	
+	
+	<div id="code_choose" style="display:none;padding-left:15px;padding-right:15px">
+		<input type="hidden" id="edit_oc_id"/>
+		<div class="row">
+			<div class="col-md-6 margin-bottom-15" th:each="soc:${counter_ocs}">
+				<div th:each="aoc:${all_ocs}" th:if="${aoc.code==soc.oc}" class="i-checks"><label> <input class="av_ccs" type="checkbox" th:value="${aoc.code}"> <i></i> [[${aoc.name}]] </label></div>
+			</div>
+		</div>
+		<div class="row templatemo-form-buttons" style="margin-top:15px;">
+			<div class="col-md-12">
+				<input type="hidden" class="form-control" id="ct_id" value="0">
+				<button data-style="zoom-in" class="ladda-button btn btn-primary save_code" style="width:100%">保存</button>
+			</div>
+		</div>
+	</div>
+	
+	
+	<input type="hidden" class="form-control" id="cc_id" th:value="${counter.id}">
+	
+	<!-- Mainly scripts -->
+	<script th:src="@{{sp}/js/jquery-2.1.1.js(sp=${pub_bucket})}"></script>
+	<script th:src="@{{sp}/js/bootstrap.min.js(sp=${pub_bucket})}"></script>
+	<script th:src="@{{sp}/js/plugins/metisMenu/jquery.metisMenu.js(sp=${pub_bucket})}"></script>
+	<script th:src="@{{sp}/js/plugins/slimscroll/jquery.slimscroll.min.js(sp=${pub_bucket})}"></script>
+
+	<!-- Custom and plugin javascript -->
+	<script th:src="@{{sp}/js/inspinia.js(sp=${pub_bucket})}"></script>
+	<script th:src="@{{sp}/js/plugins/pace/pace.min.js(sp=${pub_bucket})}"></script>
+	<script th:src="|${pub_bucket}/js/plugins/jsTree/jstree.min.js|"></script>	
+	<script th:src="@{{sp}/third/layer3/layer.js(sp=${pub_bucket})}" type="text/javascript"></script>
+	<script th:src="|${pub_bucket}/js/plugins/sweetalert/sweetalert.min.js|"></script>
+	<!-- iCheck -->
+    <script th:src="|${pub_bucket}/js/plugins/iCheck/icheck.min.js|"></script>
+    
+    <!-- Ladda -->
+    <script th:src="|${pub_bucket}/js/plugins/ladda/spin.min.js|"></script>
+    <script th:src="|${pub_bucket}/js/plugins/ladda/ladda.min.js|"></script>
+    <script th:src="|${pub_bucket}/js/plugins/ladda/ladda.jquery.min.js|"></script>
+    
+    <script th:src="|${pub_bucket}/js/plugins/select2/select2.full.min.js|"></script>
+</body>
+
+<script type="text/javascript">
+$(function() {
+	$("#pjs").select2({placeholder:'选择门店'});
+	var l = $(".ladda-button").ladda();
+	$('.i-checks').iCheck({
+        checkboxClass: 'icheckbox_square-green',
+        radioClass: 'iradio_square-green',
+    });
+	
+	$(".blick_g").on("ifChecked ifUnchecked", function(event) {
+		var id = $(this).attr("attr_id");
+		var tyc = $(this).attr("attr_tyc");
+		var code = $(this).attr("attr_code");
+		if (event.type == 'ifChecked') {
+            $(this).iCheck('check');
+        } else {
+        	$(this).iCheck('uncheck');
+        }
+		var $this = $(this);
+		$.get('/trade/cashier/aj/doswitch',{id:id}, function(data) {
+			if(data.available&&data.data!=null) {
+				$this.parent().parent().parent().find('td').eq(4).html(data.data.flag==0?'启用':'停用');
+			}
+		});
+	});
+	
+	$(".add_ct").on("click", function() {
+		$("#cf_id").val(0);
+		$("#cf_type").val('100');
+		$("#cf_code").val('');
+		$("#cf_name").val('');
+		$("#cf_info").val('');
+		layer.open({
+			area : [ '70%', '80%' ],
+			type : 1,
+			content : $("#templatemo-preferences-form")
+		});
+	});
+	$(".save_ct").on("click", function() {
+		var cf_id = $("#cf_id").val();
+		var cf_type = $("#cf_type").val();
+		var cf_code = $("#cf_code").val();
+		var cf_name = $("#cf_name").val();
+		var cf_info = $("#cf_info").val();
+		var cc_id = $("#cc_id").val();
+		var params = {id:cf_id,type:cf_type,sn:cf_code,name:cf_name,info:cf_info,cc_id:cc_id};
+		var $this = $(this);
+		$this.ladda('start');
+		$.post('/trade/cashier/aj/save_conf', params, function(data) {
+			$this.ladda('stop');
+			layer.closeAll();
+			if(data.available) {
+				swal({title: "Good job!", text: "操作成功", type: "success"}, function() {
+					location.reload();
+				});
+			} else {
+				var code = data.messages[0];
+				if(data.messages.length>1) {
+					code = data.messages[1] + "，" + code; 
+				}
+				var msg = "操作失败：" + code;
+				layer.msg(msg, {shift: 6});
+			}
+		});
+	});
+	$(".remove_cf").on("click", function() {
+		var $this = $(this);
+		swal({
+	        title: "确定删除收银台配置信息吗?",
+	        type: "warning",
+	        showCancelButton: true,
+	        confirmButtonColor: "#DD6B55",
+	        confirmButtonText: "确定",
+	        closeOnConfirm: true
+	    }, function () {
+	    	$this.ladda('start');
+	    	$.get('/trade/cashier/aj/remove_conf', {id:$this.attr("attr_id")}, function(data) {
+	    		$this.ladda('stop');
+	    		if(data.available) {
+	    			swal("Deleted!", "操作成功.", "success");
+	    			$this.parent().parent().fadeOut();
+	    		} else {
+	    			var code = data.messages[0];
+					if(data.messages.length>1) {
+						code = data.messages[1] + "，" + code; 
+					}
+					var msg = "操作失败：" + code;
+					layer.msg(msg, {shift: 6});
+	    		}
+	    	});
+	    });
+	});
+	$(".edit_cf").on("click", function() {
+		var $this = $(this);
+		$this.ladda('start');
+		$.get('/trade/cashier/aj/view_conf', {id:$this.attr("attr_id")}, function(data) {
+			$this.ladda('stop');
+			if(data.available) {
+				$("#cf_id").val(data.data.id);
+				$("#cf_type").val(data.data.cft);
+				$("#cf_code").val(data.data.code);
+				$("#cf_name").val(data.data.name);
+				$("#cf_info").val(data.data.info);
+				layer.open({
+					area : [ '70%', '80%' ],
+					type : 1,
+					content : $("#templatemo-preferences-form")
+				});
+			} else {
+				var code = data.messages[0];
+				if(data.messages.length>1) {
+					code = data.messages[1] + "，" + code; 
+				}
+				var msg = "操作失败：" + code;
+				layer.msg(msg, {shift: 6});
+			}
+		});
+	});
+	
+	$(".edit_ocs").on("click", function() {
+		var $this = $(this);
+		$("#edit_oc_id").val($this.parent().attr("attr_id"));
+		$(".av_ccs").each(function() {
+			$(this).iCheck('uncheck'); var obj = this;
+		});
+		layer.open({
+			area : [ '30%', '50%' ],
+			type : 1,
+			content : $("#code_choose")
+		});
+	});
+	
+	$(".save_code").on("click", function() {
+		var edocid = $("#edit_oc_id").val();
+		var sel = ''
+		$(".av_ccs").each(function() {
+			if(true == $(this).is(':checked')){
+				sel = $(this).val() + ',' + sel;
+			}
+		});
+		layer.closeAll();
+		$.get('/trade/cashier/aj/conf_param', {id:edocid,sel:sel}, function(data){
+			if(!data.available) {
+				var code = data.messages[0];
+				if(data.messages.length>1) {
+					code = data.messages[1] + "，" + code; 
+				}
+				var msg = "操作失败：" + code;
+				layer.msg(msg, {shift: 6});
+			} else {
+				swal({title: "Good job!", text: "操作成功", type: "success"}, function() {
+					location.reload();
+				});
+			}
+		});
+	});
+});
+</script>
+
+</html>

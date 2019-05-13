@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>[[${str}]] | 交易管理</title>
+<link th:href="@{{sp}/css/bootstrap.min.css(sp=${pub_bucket})}" rel="stylesheet">
+<link th:href="@{{sp}/font-awesome/css/font-awesome.css(sp=${pub_bucket})}" rel="stylesheet">
+<link th:href="@{{sp}/css/animate.css(sp=${pub_bucket})}" rel="stylesheet">
+<link th:href="@{{sp}/css/style.css(sp=${pub_bucket})}" rel="stylesheet">
+<link th:href="|${pub_bucket}/css/plugins/iCheck/custom.css|" rel="stylesheet">
+<link th:href="|${pub_bucket}/css/plugins/jsTree/style.min.css|" rel="stylesheet">
+<link th:href="|${pub_bucket}/css/plugins/sweetalert/sweetalert.css|" rel="stylesheet">
+<link th:href="|${pub_bucket}/css/plugins/ladda/ladda-themeless.min.css|" rel="stylesheet">
+
+<link th:href="|${pub_bucket}/css/plugins/select2/select2.min.css|" rel="stylesheet">
+</head>
+
+<body>
+	<div id="wrapper">
+		<div th:replace="../common/nav"></div>
+		<div id="page-wrapper" class="gray-bg">
+			<div th:replace="../common/top"></div>
+			<div class="row wrapper border-bottom white-bg page-heading">
+				<div class="col-sm-4">
+					<h2>交易管理</h2>
+					<ol class="breadcrumb">
+						<li><a href="javascript:;">Home</a></li>
+						<li class="active"><strong>交易列表</strong></li>
+					</ol>
+				</div>
+			</div>
+
+			<div class="wrapper wrapper-content animated fadeInRight ecommerce" style="padding-bottom:0px;">
+				<div class="ibox-content m-b-sm border-bottom">
+					<div class="row">
+						<div class="col-sm-2">
+							<div class="form-group">
+								<label class="control-label" for="ware_house">门店</label>
+								<select name="store" id="store" class="form-control store">
+									<option></option>
+									<option th:each="w:${all_stores}" th:selected="${w.id==store}" th:value="${w.id}" th:text="${w.store_name}"></option>
+								</select>
+							</div>
+						</div>
+						<div class="col-sm-2">
+							<div class="form-group">
+								<label class="control-label" for="trade_ss">交易状态</label>
+								<select name="trade_ss" id="trade_ss" class="form-control trade_ss">
+									<option></option>
+									<option value='all' th:selected="${ss=='all'}">全部</option>
+									<option value='init' th:selected="${ss=='init'}">待付款</option>
+									<option value='payed' th:selected="${ss=='payed'}">已付款</option>
+									<option value="back" th:selected="${ss=='back'}">退单</option>
+								</select>
+							</div>
+						</div>
+						<div class="col-sm-2">
+							<div class="form-group">
+								<label class="control-label" for="t_mob">手机号码</label>
+								<input type="text" id="t_mob" name="t_mob" placeholder="输入客户手机号码" class="input-sm form-control" th:value="${tmob}">
+							</div>
+						</div>
+						<div class="col-sm-3">
+							<div class="form-group">
+								<label class="control-label" for="t_num">交易编号</label>
+								<input type="text" id="t_num" name="t_num" placeholder="输入交易编号" class="input-sm form-control" th:value="${tnum}">
+							</div>
+						</div>
+						<div class="col-sm-3">
+							<div class="form-group">
+								<label class="control-label" for="o_num">订单编号</label>
+								<div class="input-group">
+									<input type="text" id="o_num" name="o_num" placeholder="输入订单编号" class="input-sm form-control" th:value="${onum}"> 
+									<span class="input-group-btn">
+										<button type="button" class="btn btn-sm btn-primary do_query"> 查询</button>
+									</span>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div class="row">
+				<div class="col-lg-12 goods_area">
+					<div class="wrapper wrapper-content animated fadeInUp" style="padding-top:0px;">
+						<div class="ibox">
+							<div class="ibox-content">
+								<div class="table-responsive">
+                                	<table class="table table-striped">
+										<thead>
+		                                    <tr>
+		                                    	<th>#</th>
+												<th>交易编号</th>
+												<th>创建时间</th>
+												<th>订单状态</th>
+												<th>订单总价</th>
+												<th>实付总价</th>
+												<th>支付方式</th>
+												<th>门店</th>
+												<th>操作</th>
+		                                    </tr>
+	                                    </thead>
+										<tbody>
+											<tr th:each="st:${page.result}" th:attr_id="${st.id }">
+												<td class="check-mail">
+							                        <input type="checkbox" class="i-checks blick_g" th:attr_id="${st.id}">
+							                    </td>
+												<td>[[${st.tnum }]]</td>
+												<td>[[${#dates.format(st.a_time, 'yyyy-MM-dd HH:mm:ss')}]]</td>
+												<td>
+													<span th:each="t:${all_tss}" th:if="${st.tss==t.code}" th:text="${t.name}"></span>
+												</td>
+												<td>[[${st.total_amount/100}]]</td>
+												<td>[[${st.pay_amount/100}]]</td>
+												<td>
+													<span th:each="sd:${supp_dics}" th:if="${sd.code==st.pay_type}" th:text="${sd.name}"></span>
+												</td>
+												<td>[[${st.storename}]]</td>
+												<td>
+													<button data-style="zoom-in" class="ladda-button btn btn-warning btn-sm item" th:attr_id="${st.id }" th:attr_tss="${st.tss }"><i class="fa fa-rub"></i> 明细 </button>
+													<button data-style="zoom-in" class="ladda-button btn btn-primary btn-sm pay_info" th:id="${st.id }"><i class="fa fa-ticket"></i> 付款信息 </button>
+													<button data-style="zoom-in" class="ladda-button btn btn-danger btn-sm invoice" th:attr_id="${st.id }"><i class="fa fa-rub"></i> 发票信息 </button>
+													
+													<button data-style="zoom-in" class="ladda-button btn btn-danger btn-sm pay hide" th:attr_id="${st.tnum }"><i class="fa fa-rub"></i> 测试支付 </button>
+													<button data-style="zoom-in" class="ladda-button btn btn-danger btn-sm refund" th:attr_id="${st.id }"><i class="fa fa-rub"></i> 退单退款 </button>
+													<button data-style="zoom-in" class="ladda-button btn btn-danger btn-sm refund_single" th:attr_id="${st.id }"><i class="fa fa-rub"></i> 只退款 </button>
+												</td>
+											</tr>
+										</tbody>
+									</table>
+									<div th:replace="../common/page"></div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div th:replace="../common/foot"></div>
+		</div>
+	</div>
+
+	<div id="templatemo-preferences-form" style="display:none;padding-left:15px;padding-right:15px">
+		<div class="row">
+			<div class="col-md-12 margin-bottom-15">
+				<label class="control-label" for="sp_no">微信支付码</label> 
+				<input type="text" class="form-control" id="sp_no" placeholder="请扫描微信支付二维码">
+				<input type="hidden" class="form-control" id="trade_id" placeholder="">
+			</div>
+		</div>
+		
+		<div class="row templatemo-form-buttons">
+			<div class="col-md-12" style="margin-top:15px">
+				<button id="do_pay" class="btn btn-primary do_pay" style="width:100%">付款</button>
+			</div>
+		</div>
+	</div>
+	
+	
+	<!-- Mainly scripts -->
+	<script th:src="@{{sp}/js/jquery-2.1.1.js(sp=${pub_bucket})}"></script>
+	<script th:src="@{{sp}/js/bootstrap.min.js(sp=${pub_bucket})}"></script>
+	<script th:src="@{{sp}/js/plugins/metisMenu/jquery.metisMenu.js(sp=${pub_bucket})}"></script>
+	<script th:src="@{{sp}/js/plugins/slimscroll/jquery.slimscroll.min.js(sp=${pub_bucket})}"></script>
+
+	<!-- Custom and plugin javascript -->
+	<script th:src="@{{sp}/js/inspinia.js(sp=${pub_bucket})}"></script>
+	<script th:src="@{{sp}/js/plugins/pace/pace.min.js(sp=${pub_bucket})}"></script>
+	<script th:src="|${pub_bucket}/js/plugins/jsTree/jstree.min.js|"></script>	
+	<script th:src="@{{sp}/third/layer3/layer.js(sp=${pub_bucket})}" type="text/javascript"></script>
+	<script th:src="|${pub_bucket}/js/plugins/sweetalert/sweetalert.min.js|"></script>
+	<!-- iCheck -->
+    <script th:src="|${pub_bucket}/js/plugins/iCheck/icheck.min.js|"></script>
+    
+    <!-- Ladda -->
+    <script th:src="|${pub_bucket}/js/plugins/ladda/spin.min.js|"></script>
+    <script th:src="|${pub_bucket}/js/plugins/ladda/ladda.min.js|"></script>
+    <script th:src="|${pub_bucket}/js/plugins/ladda/ladda.jquery.min.js|"></script>
+    
+    <script th:src="|${pub_bucket}/js/plugins/select2/select2.full.min.js|"></script>
+	<script>
+		$(document).ready(function() {
+
+			$('#loading-example-btn').click(function() {
+				btn = $(this);
+				simpleLoad(btn, true)
+				simpleLoad(btn, false)
+			});
+		});
+
+		function simpleLoad(btn, state) {
+			if (state) {
+				btn.children().addClass('fa-spin');
+				btn.contents().last().replaceWith(" Loading");
+			} else {
+				setTimeout(function() {
+					btn.children().removeClass('fa-spin');
+					btn.contents().last().replaceWith(" 分组管理");
+				}, 2000);
+			}
+		}
+	</script>
+</body>
+
+<script type="text/javascript">
+$(function() {
+	$(".store").select2({placeholder:'选择交易门店',allowClear:true});
+	$(".trade_ss").select2({placeholder:'选择交易状态',allowClear:true});
+	
+	var l = $(".ladda-button").ladda();
+	$('.i-checks').iCheck({
+        checkboxClass: 'icheckbox_square-green',
+        radioClass: 'iradio_square-green',
+    });
+	var check_gs = [];
+	$(".blick_g").on("ifChecked ifUnchecked", function(event) {
+		var id = $(this).attr("attr_id");
+		if (event.type == 'ifChecked') {
+            $(this).iCheck('check');
+            check_gs.push(id);
+        } else {
+        	$(this).iCheck('uncheck');
+        	check_gs.splice($.inArray(id, check_gs), 1);
+        }
+	});
+	
+	$(".do_query").on("click", function() {
+		var t_num = $.trim($("#t_num").val());
+		var o_num = $.trim($("#o_num").val());
+		var store = $("#store").val();
+		var ss = $("#trade_ss").val();
+		let t_mob = $.trim($("#t_mob").val());
+		location.href = '/trade/mgr/index?onum='+o_num+'&tnum='+t_num+'&store='+store+'&ss='+ss+'&mob='+t_mob + '&' + new Date().getTime();
+	});
+	$(".item").on("click", function() {
+		$(this).ladda('start');
+		location.href = '/trade/mgr/item?tid=' + $(this).attr("attr_id")+ '&tss=' + $(this).attr("attr_tss") + '&' + new Date().getTime();
+	});
+	$(".pay").on('click', function() {
+		$("#sp_no").val('');
+		$("#trade_id").val($(this).attr("attr_id"));
+		layer.open({
+			area : [ '60%', '80%'],
+			type : 1,
+			content : $("#templatemo-preferences-form")
+		});
+	});
+	$("#do_pay").on('click', function() {
+		var wxpaycode = $.trim($("#sp_no").val());
+		$.post('/trade/incall/uni_code_pay', {ct:'201001', tnum:$("#trade_id").val(), unicode:wxpaycode}, function(data) {
+			console.log(data);
+		});
+	});
+	
+	$(".refund").on("click", function() {
+		var tid = $(this).attr("attr_id");
+		var $this = $(this);
+		swal({
+            title: "确定进行退款操作吗?",
+            text: "款项将直接原路回退致客户的付款账户",
+            type: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#DD6B55",
+            confirmButtonText: "确认退款",
+            closeOnConfirm: true
+        }, function () {
+        	$this.ladda('start');
+        	$.post('/trade/mgr/aj/refund_trade', {tid:tid}, function(data) {
+        		$this.ladda('stop');
+        		if(data.available) {
+        			swal({title: "操作成功!", text: "请稍后确认客户账户的退款情况通知.", type: "success"}, function() {
+						location.reload();
+					});
+        		} else {
+        			var code = data.messages[0];
+        			if(data.messages.length>1) {
+        				code = data.messages[1] + code;
+        			}
+        			swal({title: "Error", text: "操作失败：" + code, type: "error"});
+        		}
+        	});
+        });
+	});
+	
+	$(".refund_single").on("click", function() {
+		var tid = $(this).attr("attr_id");
+		var $this = $(this);
+		swal({
+            title: "确定进行退款操作吗?",
+            text: "注意：此操作将只进行退款并不进行退单操作",
+            type: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#DD6B55",
+            confirmButtonText: "确认退款",
+            closeOnConfirm: true
+        }, function () {
+        	$this.ladda('start');
+        	$.post('/trade/mgr/aj/refund_trade_single', {tid:tid}, function(data) {
+        		$this.ladda('stop');
+        		if(data.available) {
+        			swal({title: "操作成功!", text: "请稍后确认客户账户的退款情况通知.", type: "success"}, function() {
+						location.reload();
+					});
+        		} else {
+        			var code = data.messages[0];
+        			if(data.messages.length>1) {
+        				code = data.messages[1] + code;
+        			}
+        			swal({title: "Error", text: "操作失败：" + code, type: "error"});
+        		}
+        	});
+        });
+	});
+	
+	$(".pay_info").on("click", function() {
+		$(this).ladda('start');
+		location.href = '/trade/mgr/pay_info?tid=' + $(this).attr("id");
+	});
+	$(".invoice").on("click", function() {
+		$(this).ladda('start');
+		location.href = '/trade/mgr/invoice_list?tid=' + $(this).attr("attr_id");
+	});
+});
+</script>
+
+<script type="text/javascript">
+(function($){
+
+	var barcode = {
+
+		listenerObj: null,
+		letter : true,
+		number : true,
+		check : true,
+
+		oneKeyTime : '', /* 一次按键时间间隔 */
+		twoKeyTime : '', /* 两次按键时间间隔 */
+		keyDownTime: '', /* 键按下的时间    */
+		barcodeLen : 18 , /* 条形码长度      */
+		spanTime   : 70, /* 一次按键按下到释放的时间间隔 */
+		zerokeyVal : 48, /* 零的key值      */
+		ninekeyVal : 57, /* 数字9的key值   */
+		akeyVal    : 65, /* a的key值      */
+		zkeyVal    : 90, /* z的key值      */
+		
+		show : function(){},
+
+		checkHandInput : function(){
+					console.log(this.oneKeyTime);
+
+			if((this.oneKeyTime > this.spanTime)){
+				return true;
+			}else{
+				return false;
+			}
+		},
+		on_key_down : function (){
+			var that = this;
+			this.listenerObj.keydown(function(e){
+
+				if(e.which !== 13 && !(that.in_range(e.which))){
+					$(that.listenerObj).val('');
+					return ;
+				}
+				var d = new Date();
+				var curTime = parseInt(d.getTime());
+				if(that.keyDownTime !== '' && that.keyDownTime !== NaN){
+					that.twoKeyTime = curTime - that.keyDownTime;
+				}
+				that.keyDownTime = curTime;
+			});
+		},
+		on_key_up : function(){
+			var that = this;
+			this.listenerObj.keyup(function(e){
+				var d = new Date();
+				var keyUpTime = d.getTime();
+
+				that.oneKeyTime = parseInt(keyUpTime) - parseInt(that.keyDownTime);
+
+				var isHand = that.checkHandInput();
+
+				if(that.check && isHand && that.in_range(e.which)){
+					layer.msg('禁止手动输入');
+					$(that.listenerObj).val("");
+				}
+			})
+		},
+		on_key_press : function(){
+			var that = this;
+			this.listenerObj.keypress(function(e){
+				if(e.which == 13 && that.check_barcode()){
+					that.createListEl();
+				}
+			});
+		},
+		check_barcode : function(){
+			var code = $(this.listenerObj).val();
+			if(code.length > this.barcodeLen){
+				$(this.listenerObj).val("");//.focus();
+				layer.msg('条码不合法',{time : 800});
+			}else{
+				return true;
+			}
+		},
+		//判断按下的键是否在字母加数字这个范围
+		in_range : function(key){
+
+			var isLegal = false;
+			if(this.number){
+				isLegal = this.is_number(key);
+			}
+			if(this.letter){
+				isLegal = this.is_letter(key);
+			}
+			if(this.number && this.letter){
+				isLegal = (this.is_number || this.is_letter)? true : false;
+			}
+			return isLegal;
+		},
+		is_number : function(key){
+			if(key > this.ninekeyVal || key < this.zerokeyVal){
+				return false;
+			}else{
+				return true;
+			}
+		},
+		is_letter : function(key){
+			if(key > this.zkeyVal || key < this.akeyVal){
+				return false;
+			}else{
+				return true;
+			}
+		},
+		check_network : function(){
+			return (navigator.onLine)? true : false;
+		},
+		createListEl : function(){
+			if(typeof this.show == 'function'){
+				this.show(this.listenerObj.val());
+				// layer.msg('扫描成功',{time:1000});
+			}else{
+				layer.msg('no callback function');
+			}
+			this.listenerObj.val("").focus();
+		},
+		keepFocusInput : function(){
+			this.listenerObj.blur(function(){
+				var that = $(this);
+				setTimeout(function(){ 
+					that.focus().select();
+				},300);
+			});
+		},
+		startListen : function(listenerObj, settings){
+			for(var member in settings){
+				if(typeof barcode[member] !== 'undefined'){
+					barcode[member] = settings[member];
+				}
+			}
+			barcode.listenerObj = listenerObj;
+
+			this.on_key_down();
+			this.on_key_up();
+			this.on_key_press();
+			this.keepFocusInput();
+			this.listenerObj.focus().select();
+		}
+
+	};
+	$.fn.startListen = function(options){
+		var settings = $.extend({
+			barcodeLen : 8,
+			letter : false,//条码不包含字母
+			number : true, //条码为数字
+		},options);
+		barcode.startListen(this,settings);
+	}
+
+})(jQuery);
+
+$("#sp_no_bak").startListen({
+    barcodeLen : 38,
+    letter : true,
+    number : true,
+    show : function(code){
+        layer.msg(code);
+    }
+});
+</script>
+</html>

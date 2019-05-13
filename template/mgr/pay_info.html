@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>[[${str}]] | 交易支付信息管理</title>
+<link th:href="@{{sp}/css/bootstrap.min.css(sp=${pub_bucket})}" rel="stylesheet">
+<link th:href="@{{sp}/font-awesome/css/font-awesome.css(sp=${pub_bucket})}" rel="stylesheet">
+<link th:href="@{{sp}/css/animate.css(sp=${pub_bucket})}" rel="stylesheet">
+<link th:href="@{{sp}/css/style.css(sp=${pub_bucket})}" rel="stylesheet">
+<link th:href="|${pub_bucket}/css/plugins/iCheck/custom.css|" rel="stylesheet">
+<link th:href="|${pub_bucket}/css/plugins/jsTree/style.min.css|" rel="stylesheet">
+<link th:href="|${pub_bucket}/css/plugins/sweetalert/sweetalert.css|" rel="stylesheet">
+<link th:href="|${pub_bucket}/css/plugins/ladda/ladda-themeless.min.css|" rel="stylesheet">
+
+<link th:href="|${pub_bucket}/css/plugins/select2/select2.min.css|" rel="stylesheet">
+</head>
+
+<body>
+	<div id="wrapper">
+		<div th:replace="../common/nav"></div>
+		<div id="page-wrapper" class="gray-bg">
+			<div th:replace="../common/top"></div>
+			<div class="row wrapper border-bottom white-bg page-heading">
+				<div class="col-sm-4">
+					<h2>[[${trade.tnum}]]</h2>
+					<ol class="breadcrumb">
+						<li><a href="javascript:;">Home</a></li>
+						<li><a href="/trade/mgr/index">交易列表</a></li>
+						<li class="active"><strong>支付与优惠</strong></li>
+					</ol>
+				</div>
+			</div>
+
+			<div class="row">
+				<div class="col-lg-12">
+					<div class="wrapper wrapper-content animated fadeInUp">
+						
+						
+						<div class="ibox">
+							<div class="ibox-content">
+								<div class="row">
+					                <div class="col-lg-12">
+					                    <div class="tabs-container">
+					                        <ul class="nav nav-tabs">
+					                            <li class="active"><a data-toggle="tab" href="#tab-1"> 付款方式</a></li>
+					                            <li class=""><a data-toggle="tab" href="#tab-2">优惠方式</a></li>
+					                        </ul>
+					                        <div class="tab-content">
+					                            <div id="tab-1" class="tab-pane active">
+													<div class="ibox">
+														<div class="ibox-content">
+															<div class="row m-b-sm m-t-sm">
+																<div class="col-sm-6 m-b-xs">
+																	<button type="button" data-style="zoom-in" class="btn btn-primary btn-sm batch_for_invoice ladda-button">
+																		<i class="fa fa-rub"></i> 选中开票
+																	</button>
+																</div>
+																<div class="col-sm-6 cat_info">
+																	<h5></h5>
+																</div>
+															</div>
+															<div class="table-responsive">
+							                                	<table class="table table-striped">
+																	<thead>
+									                                    <tr>
+									                                    	<th>#</th>
+									                                    	<th>pay_id</th>
+																			<th>支付代码</th>
+																			<th>支付方式</th>
+																			<th>支付时间</th>
+																			<th>交易流水号</th>
+																			<th>支付金额</th>
+																			<th>开票金额</th>
+																			<th>交易类型</th>
+																			<!-- <th>操作</th> -->
+									                                    </tr>
+								                                    </thead>
+																	<tbody>
+																		<tr th:each="st:${result}" th:attr_id="${st.id }">
+																			<td class="check-mail">
+														                        <input type="checkbox" class="i-checks blick_g" th:attr_id="${st.id}" th:pay_type="${st.pay_type}">
+														                    </td>
+														                    <td>[[${st.pay_id}]] </td>
+														                   	<td>[[${st.pay_code}]] </td> 
+																			<td>
+																				<span th:each="t:${all_pay_type}" th:if="${t.code==st.pay_code}">[[${t.name}]]</span>
+																			</td>
+																			<td>[[${#dates.format(st.pay_time, 'yyyy-MM-dd HH:mm:ss')}]]</td>
+																			<td>[[${st.trans_id}]]</td>
+																			<td>[[${st.trans_total_amount/100}]]</td>
+																			<td>[[${st.trans_pay_amount/100}]]</td>
+																			<td>
+																				<span th:if="${st.pay_type=='10'}">付款</span>
+																				<span th:if="${st.pay_type=='60'}">退款</span>
+																			</td>
+																			<!-- <td>
+																				<button data-style="zoom-in" class="ladda-button btn btn-danger btn-sm refund" th:attr_id="${st.id }"><i class="fa fa-rub"></i> 退款 </button>
+																			</td> -->
+																		</tr>
+																	</tbody>
+																</table>
+															</div>
+														</div>
+													</div>
+					                            </div>
+					                            
+					                            <div id="tab-2" class="tab-pane">
+													<div class="table-responsive">
+					                                	<table class="table table-striped">
+															<thead>
+							                                    <tr>
+							                                        <th>pref_id</th>
+																	<th>优惠代码</th>
+																	<th>优惠方式</th>
+																	<th>优惠名称</th>
+																	<th>抵扣金额</th>
+							                                    </tr>
+						                                    </thead>
+															<tbody>
+																<tr th:each="p:${trade_prefs}" th:attr_id="${p.id }">
+																	<td>[[${p.pref_id }]]</td>
+																	<td>[[${p.pref_code }]]</td>
+																	<td>[[${p.pref_type }]]</td>
+																	<td>[[${p.pref_name }]]</td>
+																	<td>[[${p.real_deduct/100 }]]</td>
+																</tr>
+															</tbody>
+														</table>
+													</div>
+					                            </div>
+					                        </div>
+					                    </div>
+					                </div>
+					            </div>
+							</div>
+						</div>
+						
+					</div>
+				</div>
+			</div>
+			<div th:replace="../common/foot"></div>
+		</div>
+	</div>
+	
+	<!-- Mainly scripts -->
+	<script th:src="@{{sp}/js/jquery-2.1.1.js(sp=${pub_bucket})}"></script>
+	<script th:src="@{{sp}/js/bootstrap.min.js(sp=${pub_bucket})}"></script>
+	<script th:src="@{{sp}/js/plugins/metisMenu/jquery.metisMenu.js(sp=${pub_bucket})}"></script>
+	<script th:src="@{{sp}/js/plugins/slimscroll/jquery.slimscroll.min.js(sp=${pub_bucket})}"></script>
+
+	<!-- Custom and plugin javascript -->
+	<script th:src="@{{sp}/js/inspinia.js(sp=${pub_bucket})}"></script>
+	<script th:src="@{{sp}/js/plugins/pace/pace.min.js(sp=${pub_bucket})}"></script>
+	<script th:src="|${pub_bucket}/js/plugins/jsTree/jstree.min.js|"></script>	
+	<script th:src="@{{sp}/third/layer3/layer.js(sp=${pub_bucket})}" type="text/javascript"></script>
+	<script th:src="|${pub_bucket}/js/plugins/sweetalert/sweetalert.min.js|"></script>
+	<!-- iCheck -->
+    <script th:src="|${pub_bucket}/js/plugins/iCheck/icheck.min.js|"></script>
+    
+    <!-- Ladda -->
+    <script th:src="|${pub_bucket}/js/plugins/ladda/spin.min.js|"></script>
+    <script th:src="|${pub_bucket}/js/plugins/ladda/ladda.min.js|"></script>
+    <script th:src="|${pub_bucket}/js/plugins/ladda/ladda.jquery.min.js|"></script>
+    
+    <script th:src="|${pub_bucket}/js/plugins/select2/select2.full.min.js|"></script>
+	<script>
+		$(document).ready(function() {
+
+			$('#loading-example-btn').click(function() {
+				btn = $(this);
+				simpleLoad(btn, true)
+				simpleLoad(btn, false)
+			});
+		});
+
+		function simpleLoad(btn, state) {
+			if (state) {
+				btn.children().addClass('fa-spin');
+				btn.contents().last().replaceWith(" Loading");
+			} else {
+				setTimeout(function() {
+					btn.children().removeClass('fa-spin');
+					btn.contents().last().replaceWith(" 分组管理");
+				}, 2000);
+			}
+		}
+	</script>
+</body>
+
+<script type="text/javascript" th:inline="javascript">
+var t_id = [[${trade.id}]];
+$(function() {
+	var l = $(".ladda-button").ladda();
+	$('.i-checks').iCheck({
+        checkboxClass: 'icheckbox_square-green',
+        radioClass: 'iradio_square-green',
+    });
+	var check_gs = [];
+	$(".blick_g").on("ifChecked ifUnchecked", function(event) {
+		var id = $(this).attr("attr_id");
+		if (event.type == 'ifChecked') {
+            $(this).iCheck('check');
+            check_gs.push(id);
+        } else {
+        	$(this).iCheck('uncheck');
+        	check_gs.splice($.inArray(id, check_gs), 1);
+        }
+	});
+	$(".batch_for_invoice").on("click", function() {
+		if(check_gs.length==0) {
+			swal({title: "Error", text: "请选择要开票的付款信息", type: "error"});
+			return;
+		}
+		for(x in check_gs) {
+			$(".blick_g").each(function() {
+				if($(this).attr("attr_id")==check_gs[x]&&$(this).attr("pay_type")=='60') {
+					swal({title: "Error", text: "发票不可选择退款类交易", type: "error"});
+					return;
+				}
+			});
+		}
+		//TODO 开始提交发票交易
+		var $this = $(this);
+		$this.ladda('start');
+		var param = {tid:t_id,gs:check_gs.join(',')}
+		location.href = '/trade/mgr/invoice?tid=' + t_id + '&gs=' + check_gs.join(',');
+	});
+	
+	$(".refund").on("click", function() {
+		swal({title: "Error", text: "暂不支持交易订单单独退款", type: "error"});
+	});
+});
+</script>
+
+</html>

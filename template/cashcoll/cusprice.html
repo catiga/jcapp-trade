@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>[[${str}]] | 交易改价设置</title>
+<link th:href="@{{sp}/css/bootstrap.min.css(sp=${pub_bucket})}" rel="stylesheet">
+<link th:href="@{{sp}/font-awesome/css/font-awesome.css(sp=${pub_bucket})}" rel="stylesheet">
+<link th:href="@{{sp}/css/animate.css(sp=${pub_bucket})}" rel="stylesheet">
+<link th:href="@{{sp}/css/style.css(sp=${pub_bucket})}" rel="stylesheet">
+<link th:href="|${pub_bucket}/css/plugins/iCheck/custom.css|" rel="stylesheet">
+<link th:href="|${pub_bucket}/css/plugins/jsTree/style.min.css|" rel="stylesheet">
+<link th:href="|${pub_bucket}/css/plugins/sweetalert/sweetalert.css|" rel="stylesheet">
+<link th:href="|${pub_bucket}/css/plugins/ladda/ladda-themeless.min.css|" rel="stylesheet">
+<link th:href="|${pub_bucket}/css/plugins/select2/select2.min.css|" rel="stylesheet">
+</head>
+
+<body>
+	<div id="wrapper">
+		<div th:replace="../common/nav"></div>
+		<div id="page-wrapper" class="gray-bg">
+			<div th:replace="../common/top"></div>
+			<div class="row wrapper border-bottom white-bg page-heading">
+				<div class="col-sm-4">
+					<h2>交易改价配置</h2>
+					<ol class="breadcrumb">
+						<li><a href="javascript:;">Home</a></li>
+						<li class="active"><strong>改价权限</strong></li>
+					</ol>
+				</div>
+			</div>
+			
+			<div class="row">
+				<div class="col-lg-12 goods_area">
+					<div class="wrapper wrapper-content animated fadeInUp">
+						<div class="ibox">
+							<div class="ibox-content">
+								<div class="table-responsive">
+                                	<table class="table table-striped">
+										<thead>
+		                                    <tr>
+												<th>角色名称</th>
+												<th>角色类型</th>
+												<th>改价类型</th>
+												<th>操作</th>
+		                                    </tr>
+	                                    </thead>
+										<tbody>
+											<tr th:each="st:${sys_roles}" th:attr_id="${st[0]['id']}" th:id="|tr_${st[0]['id']}|">
+							                    <td>[[${st[0]['role_name']}]]</td>
+							                    <td>[[${st[0]['role_type']}]]</td>
+							                    <td>
+							                    	<span th:if="${st[1]}" th:each="dv:${st[1]}" th:attr_id="${dv.id}" class="badge badge-primary edit_ocs" th:code="${dv.vv}">[[${dv.tip}]]</span>
+							                    </td>
+												<td>
+													<button data-style="zoom-in" class="ladda-button btn btn-info btn-sm add_co"><i class="fa fa-ticket"></i> 添加 </button>
+												</td>
+											</tr>
+										</tbody>
+									</table>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div th:replace="../common/foot"></div>
+		</div>
+	</div>
+	
+	<div id="templatemo-preferences-form" style="display:none;padding-left:15px;padding-right:15px; margin-bottom: 30px; max-width: 960px;">
+		<div class="row">
+			<div class="col-md-12 margin-bottom-15">
+				<label class="control-label">改价类型</label>
+				<select class="form-control margin-bottom-15" name="vv_col" id="vv_col">
+					<option th:each="k,v:${cus_dic}" th:value="${v.current.key}">[[${v.current.value}]]</option>
+				</select>
+			</div>
+		</div>
+		
+		<div class="row templatemo-form-buttons" style="margin-top:15px;">
+			<div class="col-md-12">
+				<button id="submit_vv_col" data-style="zoom-in" class="ladda-button btn btn-primary" style="width:100%">确认</button>
+			</div>
+		</div>
+	</div>
+	
+	
+	<!-- Mainly scripts -->
+	<script th:src="@{{sp}/js/jquery-2.1.1.js(sp=${pub_bucket})}"></script>
+	<script th:src="@{{sp}/js/bootstrap.min.js(sp=${pub_bucket})}"></script>
+	<script th:src="@{{sp}/js/plugins/metisMenu/jquery.metisMenu.js(sp=${pub_bucket})}"></script>
+	<script th:src="@{{sp}/js/plugins/slimscroll/jquery.slimscroll.min.js(sp=${pub_bucket})}"></script>
+
+	<!-- Custom and plugin javascript -->
+	<script th:src="@{{sp}/js/inspinia.js(sp=${pub_bucket})}"></script>
+	<script th:src="@{{sp}/js/plugins/pace/pace.min.js(sp=${pub_bucket})}"></script>
+	<script th:src="|${pub_bucket}/js/plugins/jsTree/jstree.min.js|"></script>	
+	<script th:src="@{{sp}/third/layer3/layer.js(sp=${pub_bucket})}" type="text/javascript"></script>
+	<script th:src="|${pub_bucket}/js/plugins/sweetalert/sweetalert.min.js|"></script>
+	<!-- iCheck -->
+    <script th:src="|${pub_bucket}/js/plugins/iCheck/icheck.min.js|"></script>
+    
+    <!-- Ladda -->
+    <script th:src="|${pub_bucket}/js/plugins/ladda/spin.min.js|"></script>
+    <script th:src="|${pub_bucket}/js/plugins/ladda/ladda.min.js|"></script>
+    <script th:src="|${pub_bucket}/js/plugins/ladda/ladda.jquery.min.js|"></script>
+    
+    <script th:src="|${pub_bucket}/js/plugins/select2/select2.full.min.js|"></script>
+</body>
+
+<script type="text/javascript">
+$(function() {
+	var l = $(".ladda-button").ladda();
+	$("body").on("click", ".edit_ocs", function() {
+		var $this = $(this);
+		var id = $this.attr("attr_id");
+		var role_name = $this.parent().parent().find('td').eq(0).html();
+		swal({
+	        title: "确定删除改价设置吗?",
+	        text: "您即将取消角色【" + role_name + "】的【" + $this.html() + "】改价 权限!",
+	        type: "warning",
+	        showCancelButton: true,
+	        confirmButtonColor: "#DD6B55",
+	        confirmButtonText: "确定!",
+	        closeOnConfirm: false
+	    }, function () {
+	    	$.post('/trade/cashcoll/aj/remove_cus', {id:id}, function(data) {
+	    		if(data.available) {
+	    			$this.remove();
+	    			swal("Deleted!", "角色改价权限已经删除.", "success");
+	    		} else {
+	    			var code = data.messages[0];
+					var msg = "操作失败：" + code;
+					if(data.messages.length>1) {
+						msg = "操作失败：" + data.messages[1];
+					}
+					layer.msg(msg, {shift : 6});
+	    		}
+	    	});
+	    });
+	});
+	var selid = 0;
+	$(".add_co").on("click", function() {
+		selid = $(this).parent().parent().attr("attr_id");
+		$("#vv_col").val('');
+		layer.open({
+			area : [ '40%', '50%' ],
+			type : 1,
+			content : $("#templatemo-preferences-form")
+		});
+	});
+	$("#submit_vv_col").on("click", function() {
+		var $this = $(this);
+		$this.ladda('start');
+		$.post('/trade/cashcoll/aj/save_cus', {id:selid,v:$("#vv_col").val()}, function(data) {
+			$this.ladda('stop');
+			layer.closeAll();
+			if(data.available) {
+				swal("提示!", "角色改价权限添加成功.", "success");
+				$("#tr_" + selid).find('td').eq(2).append('<span attr_id="' + data.data.id + '" class="badge badge-primary edit_ocs">' + data.data.tip + '</span>');
+			} else {
+				var code = data.messages[0];
+				var msg = "操作失败：" + code;
+				if(data.messages.length>1) {
+					msg = "操作失败：" + data.messages[1];
+				}
+				layer.msg(msg, {shift : 6});
+			}
+		});
+	});
+});
+</script>
+
+</html>
+
+

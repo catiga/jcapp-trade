@@ -1,0 +1,126 @@
+<script th:src="@{{sp}/js/jquery-2.1.1.js(sp=${pub_bucket})}"></script>
+<nav class="navbar-default navbar-static-side" role="navigation">
+	<div class="sidebar-collapse">
+		<ul class="nav metismenu" id="side-menu">
+			<li class="nav-header">
+				<div class="dropdown profile-element">
+					<span>
+						<img th:if="${current_project.logo==null}" alt="image" class="img-circle" src="http://pe1s.static.pdr365.com/ten_video.jpeg" style="width:48px;height:48px;"/>
+						<img th:if="${current_project.logo!=null}" alt="image" class="img-circle" th:src="|http://pe1s.static.pdr365.com/${current_project.logo}|" style="width:48px;height:48px;"/>
+					</span> 
+					<a data-toggle="dropdown" class="dropdown-toggle" href="javascript:;"> 
+						<span class="clear"> 
+							<span class="block m-t-xs"> <strong class="font-bold"></strong></span> 
+							<span class="text-muted text-xs block" th:if="${current_token.roles!=null}">[[${current_token.roles[0].role_name}]]... <b class="caret"></b></span>
+						</span>
+					</a>
+					<ul class="dropdown-menu animated fadeInRight m-t-xs">
+						<li><a href="/project/desktop/index" onclick="javascript:on_redirect(this);return false;">桌面</a></li>
+						<li><a href="javascript:;" class="common_nav_bar_modify_pwd">修改密码</a></li>
+						<li class="divider"></li>
+						<li><a href="/project/index/logout" onclick="javascript:on_redirect(this);return false;">退出</a></li>
+					</ul>
+				</div>
+				<div class="logo-element">IN+</div>
+			</li>
+			
+			<script type="text/javascript">
+			$(function() {
+				var __now_uri_ = '[[${__now_uri_}]]';
+				$("a[name='" + __now_uri_ + "']:first").parent().addClass("active");
+				$("a[name='" + __now_uri_ + "']:first").parent().parent().addClass("in");
+				$("a[name='" + __now_uri_ + "']:first").parent().parent().parent().addClass("active");
+				$("a.__start_forward_").each(function() {
+					var name = $(this).attr("name");
+					if(__now_uri_.startsWith(name)) {
+						$(this).parent().addClass("active");
+						if($(this).parent().parent().hasClass('nav-second-level')) {
+							$(this).parent().parent().addClass("in");
+							$(this).parent().parent().parent().addClass("active");
+						}
+					}
+				});
+				
+				$(".common_nav_bar_modify_pwd").on("click", function() {
+					layer.open({
+						area : [ '350px', '300px' ],
+						type : 1,
+						content : $("#templatemo-preferences-form-uni-modify-pwd"),
+						cancel: function(){
+							$("#templatemo-preferences-form-uni-modify-pwd").hide();
+						}
+					});
+				});
+				$("#do_uni_modify_pwd_new").on("click", function() {
+					var o = $.trim($("#uni_modify_pwd_original").val());
+					var n = $.trim($("#uni_modify_pwd_new").val());
+					if(o==null||o=='') {layer.msg('请输入旧密码', {icon: 5}); return;}
+					if(n==null||n=='') {layer.msg('请输入新密码', {icon: 5}); return;}
+					var index = layer.load(1, { shade: [0.5,'#fff'] });
+					$.post('/project/project/aj/change_passwd', {o:o,n:n}, function(data) {
+						layer.closeAll();
+						if(data.available) {
+							layer.msg('操作成功，请重新登录');
+							location.href = '/project/index/index?code=chpwd&?'+new Date().getTime();
+						} else {
+							var code = data.messages[0];
+							var msg = "操作失败：" + code;
+							if(data.messages.length>1) {
+								msg = "操作失败：" + data.messages[1] + code;
+							}
+							layer.msg(msg, {shift: 6});
+						}
+					});
+				});
+			});
+			var nav_redirect = function(obj) {
+				var now_link = $(obj).attr('href');
+				if($(obj).parent().find("ul>li").length>0) {
+					return;
+				}
+				if(now_link.indexOf('?')>-1) {
+					location.href = now_link + '&' + new Date().getTime();
+				} else {
+					location.href = now_link + '?' + new Date().getTime();
+				}
+			}
+			</script>
+			
+			<li th:each="f:${user_roles_functions }">
+				<a th:if="${f.key.func_type=='1000'}" th:href="|${contextPath}/${f.key.click_url }|" th:name="${f.key.click_url}" class="__start_forward_" onclick="javascript:nav_redirect(this);return false;">
+					<i class="fa" th:classappend="${f.key.func_ss}"></i>
+					<span class="nav-label">[[${f.key.func_name }]]</span>
+					<span th:if="${#lists.size(f.value)>0}" class="fa arrow"></span>
+				</a>
+				
+				<ul th:if="${#lists.size(f.value)>0}" class="nav nav-second-level collapse">
+					<li th:each="s:${f.value}" th:if="${s.func_type=='1000'}">
+						<a th:href="|${contextPath}/${s.click_url}|" th:name="${s.click_url}" class="__start_forward_" onclick="javascript:nav_redirect(this);return false;">[[${s.func_name}]]</a>
+					</li>
+				</ul>
+			</li>
+		</ul>
+	</div>
+</nav>
+
+
+<div id="templatemo-preferences-form-uni-modify-pwd" style="display:none;padding-left:15px;padding-right:15px; margin-bottom: 30px; max-width: 960px;">
+	<div class="row">
+		<div class="col-md-12 margin-bottom-15">
+			<label for="uni_modify_pwd_original" class="control-label">当前密码</label>
+			<input type="password" class="form-control" id="uni_modify_pwd_original" placeholder="请输入您的当前密码">
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-md-12 margin-bottom-15">
+			<label for="uni_modify_pwd_new" class="control-label">新密码</label>
+			<input type="text" class="form-control" id="uni_modify_pwd_new" placeholder="请输入您的新密码">
+		</div>
+	</div>
+	<div class="row templatemo-form-buttons" style="margin-top:15px">
+		<div class="col-md-12">
+			<button data-style="zoom-in" id="do_uni_modify_pwd_new" class="data-ladda btn btn-primary form-control">确认</button>
+		</div>
+	</div>
+</div>
+

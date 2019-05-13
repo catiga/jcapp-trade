@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>[[${str}]] | 收款单位管理</title>
+<link th:href="@{{sp}/css/bootstrap.min.css(sp=${pub_bucket})}" rel="stylesheet">
+<link th:href="@{{sp}/font-awesome/css/font-awesome.css(sp=${pub_bucket})}" rel="stylesheet">
+<link th:href="@{{sp}/css/animate.css(sp=${pub_bucket})}" rel="stylesheet">
+<link th:href="@{{sp}/css/style.css(sp=${pub_bucket})}" rel="stylesheet">
+<link th:href="|${pub_bucket}/css/plugins/iCheck/custom.css|" rel="stylesheet">
+<link th:href="|${pub_bucket}/css/plugins/jsTree/style.min.css|" rel="stylesheet">
+<link th:href="|${pub_bucket}/css/plugins/sweetalert/sweetalert.css|" rel="stylesheet">
+<link th:href="|${pub_bucket}/css/plugins/ladda/ladda-themeless.min.css|" rel="stylesheet">
+
+<link th:href="|${pub_bucket}/css/plugins/select2/select2.min.css|" rel="stylesheet">
+</head>
+
+<body>
+	<div id="wrapper">
+		<div th:replace="../common/nav"></div>
+		<div id="page-wrapper" class="gray-bg">
+			<div th:replace="../common/top"></div>
+			<div class="row wrapper border-bottom white-bg page-heading">
+				<div class="col-sm-4">
+					<h2>收款单位设置</h2>
+					<ol class="breadcrumb">
+						<li><a href="javascript:;">Home</a></li>
+						<li class="active"><strong>收款单位</strong></li>
+					</ol>
+				</div>
+			</div>
+
+			<div class="row">
+				<div class="col-lg-12">
+					<div class="wrapper wrapper-content animated fadeInUp">
+						<div class="ibox">
+							<div class="ibox-title">
+								<div class="ibox-tools">
+									<a href="javascript:void(0)" class="btn btn-primary btn-xs add_counter ladda-button add_ct">添加收款单位</a>
+								</div>
+							</div>
+							<div class="ibox-content">
+								<div class="table-responsive">
+                                	<table class="table table-striped">
+										<thead>
+		                                    <tr>
+		                                    	<th>#</th>
+												<th>单位名称</th>
+												<th>税号</th>
+												<th>税率</th>
+												<th>开户信息</th>
+												<th>联系电话</th>
+												<th>操作</th>
+		                                    </tr>
+	                                    </thead>
+										<tbody>
+											<tr th:each="st:${invoice_sets}" th:attr_id="${st.id }">
+												<td class="check-mail">
+							                        <input type="checkbox" class="i-checks blick_g" th:attr_id="${st.id}">
+							                    </td>
+												<td>[[${st.unit_name }]]</td>
+												<td>[[${st.unit_tax }]]</td>
+												<td>[[${st.tax_fee }]]/%</td>
+												<td>
+													[[${st.unit_bank }]]<br/>
+													[[${st.unit_account }]]
+												</td>
+												<td>[[${st.unit_phone }]]</td>
+												<td>
+													<button data-style="zoom-in" class="ladda-button btn btn-primary btn-sm edit_ct" th:attr_id="${st.id }"><i class="fa fa-ticket"></i> 编辑 </button>
+													<button data-style="zoom-in" class="ladda-button btn btn-danger btn-sm remove_ct" th:attr_id="${st.id }"><i class="fa fa-rub"></i> 删除 </button>
+												</td>
+											</tr>
+										</tbody>
+									</table>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div th:replace="../common/foot"></div>
+		</div>
+	</div>
+
+	<div id="templatemo-preferences-form" style="display:none;padding-left:15px;padding-right:15px">
+		<div class="row">
+			<div class="col-md-12 margin-bottom-15">
+				<label class="control-label" for="pay_name">单位</label> 
+				<input type="text" class="form-control" id="pay_name" placeholder="请输入单位名称">
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-md-12 margin-bottom-15">
+				<label class="control-label" for="pay_addr">地址</label> 
+				<input type="text" class="form-control" id="pay_addr" placeholder="请输入单位地址信息">
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-md-12 margin-bottom-15">
+				<label class="control-label" for="pay_phone">联系电话</label> 
+				<input type="text" class="form-control" id="pay_phone" placeholder="请输入单位联系电话">
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-md-12 margin-bottom-15">
+				<label for="pay_tax" class="control-label">税号</label>
+				<input type="text" class="form-control" id="pay_tax" placeholder="请输入税号">
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-md-12 margin-bottom-15">
+				<label for="pay_tax_fee" class="control-label">税率</label>
+				<input type="text" class="form-control" id="pay_tax_fee" placeholder="请输入税率">
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-md-12 margin-bottom-15">
+				<label for="pay_bank" class="control-label">开户行</label>
+				<input type="text" class="form-control" id="pay_bank" placeholder="请输入开户银行">
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-md-12 margin-bottom-15">
+				<label for="pay_account" class="control-label">账号</label>
+				<input type="text" class="form-control" id="pay_account" placeholder="请输入开户账号">
+			</div>
+		</div>
+		<div class="row templatemo-form-buttons" style="margin-top:15px;">
+			<div class="col-md-12">
+				<button data-style="zoom-in" class="ladda-button btn btn-primary pay_info" style="width:100%">保存</button>
+			</div>
+		</div>
+	</div>
+	
+	
+	<!-- Mainly scripts -->
+	<script th:src="@{{sp}/js/jquery-2.1.1.js(sp=${pub_bucket})}"></script>
+	<script th:src="@{{sp}/js/bootstrap.min.js(sp=${pub_bucket})}"></script>
+	<script th:src="@{{sp}/js/plugins/metisMenu/jquery.metisMenu.js(sp=${pub_bucket})}"></script>
+	<script th:src="@{{sp}/js/plugins/slimscroll/jquery.slimscroll.min.js(sp=${pub_bucket})}"></script>
+
+	<!-- Custom and plugin javascript -->
+	<script th:src="@{{sp}/js/inspinia.js(sp=${pub_bucket})}"></script>
+	<script th:src="@{{sp}/js/plugins/pace/pace.min.js(sp=${pub_bucket})}"></script>
+	<script th:src="|${pub_bucket}/js/plugins/jsTree/jstree.min.js|"></script>	
+	<script th:src="@{{sp}/third/layer3/layer.js(sp=${pub_bucket})}" type="text/javascript"></script>
+	<script th:src="|${pub_bucket}/js/plugins/sweetalert/sweetalert.min.js|"></script>
+	<!-- iCheck -->
+    <script th:src="|${pub_bucket}/js/plugins/iCheck/icheck.min.js|"></script>
+    
+    <!-- Ladda -->
+    <script th:src="|${pub_bucket}/js/plugins/ladda/spin.min.js|"></script>
+    <script th:src="|${pub_bucket}/js/plugins/ladda/ladda.min.js|"></script>
+    <script th:src="|${pub_bucket}/js/plugins/ladda/ladda.jquery.min.js|"></script>
+    
+    <script th:src="|${pub_bucket}/js/plugins/select2/select2.full.min.js|"></script>
+</body>
+
+<script type="text/javascript">
+$(function() {
+	var l = $(".ladda-button").ladda();
+	$('.i-checks').iCheck({
+        checkboxClass: 'icheckbox_square-green',
+        radioClass: 'iradio_square-green',
+    });
+	var check_gs = [];
+	$(".blick_g").on("ifChecked ifUnchecked", function(event) {
+		var id = $(this).attr("attr_id");
+		if (event.type == 'ifChecked') {
+            $(this).iCheck('check');
+            check_gs.push(id);
+        } else {
+        	$(this).iCheck('uncheck');
+        	check_gs.splice($.inArray(id, check_gs), 1);
+        }
+	});
+	
+	$(".add_ct").on("click", function() {
+		id = 0;
+		$("#pay_name").val('');
+		$("#pay_tax").val('');
+		$("#pay_bank").val('');
+		$("#pay_account").val('');
+		$("#pay_addr").val('');
+		$("#pay_phone").val('');
+		$("#pay_tax_fee").val('')
+		layer.open({
+			area : [ '70%', '80%' ],
+			type : 1,
+			content : $("#templatemo-preferences-form")
+		});
+	});
+	var id = 0;
+	$(".pay_info").on("click", function() {
+		var name = $("#pay_name").val();
+		var tax = $("#pay_tax").val();
+		var bank = $("#pay_bank").val();
+		var account = $("#pay_account").val();
+		var addr = $("#pay_addr").val();
+		var phone = $("#pay_phone").val();
+		var tax_fee = $("#pay_tax_fee").val()
+		var params = {id:id,name:name,tax:tax,bank:bank,account:account,addr:addr,phone:phone,tax_fee:tax_fee};
+		var $this = $(this);
+		$this.ladda('start');
+		$.post('/trade/invset/aj/update', params, function(data) {
+			layer.closeAll();
+			$this.ladda('stop');
+			if(data.available) {
+				swal({title: "Good job!", text: "收款单位更新成功", type: "success"}, function() {
+					location.reload();
+				});
+			} else {
+				var code = data.messages[0];
+				if(data.messages.length>1) {
+					code = data.messages[1] + "，" + code; 
+				}
+				var msg = "操作失败：" + code;
+				layer.msg(msg, {shift: 6});
+			}
+		});
+	});
+	$(".edit_ct").on("click", function() {
+		var $this = $(this);
+		$this.ladda('start');
+		$.post('/trade/invset/aj/view?id=' + $this.attr("attr_id"), {}, function(data) {
+			if(data.available) {
+				id = data.data.id;
+				$("#pay_name").val(data.data.unit_name);
+				$("#pay_tax").val(data.data.unit_tax);
+				$("#pay_bank").val(data.data.unit_bank);
+				$("#pay_account").val(data.data.unit_account);
+				$("#pay_addr").val(data.data.unit_addr);
+				$("#pay_phone").val(data.data.unit_phone);
+				$("#pay_tax_fee").val(data.data.tax_fee)
+				layer.open({
+					area : [ '70%', '80%' ],
+					type : 1,
+					content : $("#templatemo-preferences-form")
+				});
+			} else {
+				var code = data.messages[0];
+				if(data.messages.length>1) {
+					code = data.messages[1] + "，" + code; 
+				}
+				var msg = "操作失败：" + code;
+				layer.msg(msg, {shift: 6});
+			}
+		});
+	});
+	
+	$(".remove_ct").on("click", function() {
+		var $this = $(this);
+		$this.ladda('start');
+		$.post('/trade/invset/aj/remove?id=' + $this.attr("attr_id"), {}, function(data) {
+			if(data.available) {
+				swal({title: "Good job!", text: "操作成功", type: "success"}, function() {
+					$this.parent().parent().fadeOut();
+				});
+			} else {
+				var code = data.messages[0];
+				if(data.messages.length>1) {
+					code = data.messages[1] + "，" + code; 
+				}
+				var msg = "操作失败：" + code;
+				layer.msg(msg, {shift: 6});
+			}
+		});
+	});
+});
+</script>
+
+</html>

@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>[[${str}]] | 交易明细查询管理</title>
+<link th:href="@{{sp}/css/bootstrap.min.css(sp=${pub_bucket})}" rel="stylesheet">
+<link th:href="@{{sp}/font-awesome/css/font-awesome.css(sp=${pub_bucket})}" rel="stylesheet">
+<link th:href="@{{sp}/css/animate.css(sp=${pub_bucket})}" rel="stylesheet">
+<link th:href="@{{sp}/css/style.css(sp=${pub_bucket})}" rel="stylesheet">
+<link th:href="|${pub_bucket}/css/plugins/iCheck/custom.css|" rel="stylesheet">
+<link th:href="|${pub_bucket}/css/plugins/jsTree/style.min.css|" rel="stylesheet">
+<link th:href="|${pub_bucket}/css/plugins/sweetalert/sweetalert.css|" rel="stylesheet">
+<link th:href="|${pub_bucket}/css/plugins/ladda/ladda-themeless.min.css|" rel="stylesheet">
+
+<link th:href="|${pub_bucket}/css/plugins/select2/select2.min.css|" rel="stylesheet">
+</head>
+
+<body>
+	<div id="wrapper">
+		<div th:replace="../common/nav"></div>
+		<div id="page-wrapper" class="gray-bg">
+			<div th:replace="../common/top"></div>
+			<div class="row wrapper border-bottom white-bg page-heading">
+				<div class="col-sm-4">
+					<h2>[[${trade.tnum}]]</h2>
+					<ol class="breadcrumb">
+						<li><a href="javascript:;">Home</a></li>
+						<li><a href="/trade/mgr/index">交易列表</a></li>
+						<li class="active"><strong>订单明细</strong></li>
+					</ol>
+				</div>
+			</div>
+
+			<div class="row">
+				<div class="col-lg-12 goods_area">
+					<div class="wrapper wrapper-content animated fadeInUp">
+						<div class="ibox">
+							<div class="ibox-content">
+								<div class="table-responsive">
+                                	<table class="table table-striped">
+										<thead>
+		                                    <tr>
+		                                    	<th>#</th>
+		                                    	<th>订单类型</th>
+												<th>订单编号</th>
+												<th>订单时间</th>
+												<th>订单状态</th>
+												<th>订单总价</th>
+												<div th:if="${tss!='0000'}"><th>应付总价</th></div>
+												<th>门店</th>
+												<!-- <th>操作</th> -->
+		                                    </tr>
+	                                    </thead>
+										<tbody>
+											<tr th:each="st:${result}" th:attr_id="${st.id }">
+												<td class="check-mail">
+							                        <input type="checkbox" class="i-checks blick_g" th:attr_id="${st.id}">
+							                    </td>
+							                    <td>
+							                    	<span th:if="${st.oc=='1000'}">商品订单</span>
+							                    	<span th:if="${st.oc=='8000'}">会员开卡订单</span>
+							                    	<span th:if="${st.oc=='8001'}">会员卡充值订单</span>
+							                    	<span th:if="${st.oc=='2000'}">选座订单</span>
+							                    	<span th:if="${st.oc=='2010'}">预约选座订单</span>
+							                    </td>
+												<td>[[${st.order_num }]]</td>
+												<td>[[${#dates.format(st.a_time, 'yyyy-MM-dd HH:mm:ss')}]]</td>
+												<td>
+													<span th:each="t:${all_tss}" th:if="${st.oss==t.code}" th:text="${t.name}"></span>
+												</td>
+												<td>[[${st.total_amount/100}]]</td>
+												<div th:if="${tss!='0000'}"><td>[[${st.pay_amount/100}]]</td></div>
+												<td>[[${st.storename}]]</td>
+												<td>
+												    <span th:if="${st.oc=='1000'}"><a class="do_getitem" th:attr="order_num=${st.order_num },oc=${st.oc}">商品订单详情</a></span>
+							                    	<span th:if="${st.oc=='8000'}"><a class="do_getitem" th:attr="order_num=${st.order_num },oc=${st.oc}">会员开卡订单详情</a></span>
+							                    	<span th:if="${st.oc=='8001'}"><a class="do_getitem" th:attr="order_num=${st.order_num },oc=${st.oc}">会员卡充值订单详情</a></span>
+							                    	<span th:if="${st.oc=='2000'}"><a class="do_getitem" th:attr="order_num=${st.order_num },oc=${st.oc}">选座订单详情</a></span>
+							                    	<span th:if="${st.oc=='2010'}"><a class="do_getitem" th:attr="order_num=${st.order_num },oc=${st.oc}">预约选座订单</a></span>
+							                    </td>
+												<!-- <td> 
+													<button data-style="zoom-in" class="ladda-button btn btn-danger btn-sm refund" th:attr_id="${st.id }"><i class="fa fa-rub"></i> 退款 </button>
+												</td> -->
+											</tr>
+										</tbody>
+									</table>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div th:replace="../common/foot"></div>
+		</div>
+	</div>
+
+	<div id="whs_list_goods" style="display: none; padding-left: 15px; padding-right: 15px; margin-bottom: 30px; max-width: 960px;">
+		<div class="row">
+			<div class="col-md-12 margin-bottom-15">
+				<label for="ware_list" class="control-label">商品详细信息</label>
+				<table class="table table-striped">
+					<thead>
+						<tr>
+							<th>#</th>
+							<th>图片</th>
+							<th>商品名称</th>
+							<th>原价</th>
+							<th>购买数量</th>					
+						</tr>
+					</thead>
+					<tbody id="sto_item_goods">
+					</tbody>
+				</table>
+				<label for="ware_list" class="control-label" id = "control-label_goods" style = "float:right;"></label>
+			</div>
+		</div>
+	</div>
+
+    <div id="whs_list_crm" style="display: none; padding-left: 15px; padding-right: 15px; margin-bottom: 30px; max-width: 960px;">
+		<div class="row">
+			<div class="col-md-12 margin-bottom-15">
+				<label for="ware_list" class="control-label">会员开卡详细信息</label>
+				<table class="table table-striped">
+					<thead>
+						<tr>
+							<th>#</th>
+							<th>卡号</th>
+							<th>等级</th>
+							<th>卡余额</th>					
+						</tr>
+					</thead>
+					<tbody id="sto_item_crm">
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+	
+	<div id="whs_list_crm_recharge" style="display: none; padding-left: 15px; padding-right: 15px; margin-bottom: 30px; max-width: 960px;">
+		<div class="row">
+			<div class="col-md-12 margin-bottom-15">
+				<label for="ware_list" class="control-label">会员充值详细信息</label>
+				<table class="table table-striped">
+					<thead>
+						<tr>
+							<th>#</th>
+							<th>卡号</th>
+							<th>总金额</th>
+							<th>充值金额</th>	
+							<th>充值时间</th>					
+						</tr>
+					</thead>
+					<tbody id="sto_item_crm_recharge">
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+
+	<div id="whs_list_ticketing_choose" style="display: none; padding-left: 15px; padding-right: 15px; margin-bottom: 30px; max-width: 960px;">
+		<div class="row">
+			<div class="col-md-12 margin-bottom-15">
+				<label for="ware_list" class="control-label">选座订单详细信息</label>
+				<table class="table table-striped">
+					<thead>
+						<tr>
+							<th>#</th>
+							<th>演出厅</th>
+							<th>演出内容</th>
+							<th>座位详情</th>
+							<th>应收金额</th>
+							<th>手续费</th>
+						</tr>
+					</thead>
+					<tbody id="sto_item_ticketing_choose">
+					</tbody>
+				</table>
+				<label for="ware_list" class="control-label" id = "control-label_choose" style = "float:right;"></label>
+			</div>
+		</div>
+	</div>
+	
+	<div id="whs_list_reserve_choose" style="display: none; padding-left: 15px; padding-right: 15px; margin-bottom: 30px; max-width: 960px;">
+		<div class="row">
+			<div class="col-md-12 margin-bottom-15">
+				<label for="ware_list" class="control-label">预约选座订单详细信息</label>
+				<table class="table table-striped">
+					<thead>
+						<tr>
+							<th>#</th>
+							<th>演出厅</th>
+							<th>演出内容</th>
+							<th>座位详情</th>
+							<th>应收金额</th>
+							<th>手续费</th>
+						</tr>
+					</thead>
+					<tbody id="sto_item_reserve_choose">
+					</tbody>
+				</table>
+				<label for="ware_list" id = "control-label_reserve" style = "float:right;"></label>
+			</div>
+		</div>
+	</div>
+	<!-- Mainly scripts -->
+	<script th:src="@{{sp}/js/jquery-2.1.1.js(sp=${pub_bucket})}"></script>
+	<script th:src="@{{sp}/js/bootstrap.min.js(sp=${pub_bucket})}"></script>
+	<script th:src="@{{sp}/js/plugins/metisMenu/jquery.metisMenu.js(sp=${pub_bucket})}"></script>
+	<script th:src="@{{sp}/js/plugins/slimscroll/jquery.slimscroll.min.js(sp=${pub_bucket})}"></script>
+
+	<!-- Custom and plugin javascript -->
+	<script th:src="@{{sp}/js/inspinia.js(sp=${pub_bucket})}"></script>
+	<script th:src="@{{sp}/js/plugins/pace/pace.min.js(sp=${pub_bucket})}"></script>
+	<script th:src="|${pub_bucket}/js/plugins/jsTree/jstree.min.js|"></script>	
+	<script th:src="@{{sp}/third/layer3/layer.js(sp=${pub_bucket})}" type="text/javascript"></script>
+	<script th:src="|${pub_bucket}/js/plugins/sweetalert/sweetalert.min.js|"></script>
+	<!-- iCheck -->
+    <script th:src="|${pub_bucket}/js/plugins/iCheck/icheck.min.js|"></script>
+    
+    <!-- Ladda -->
+    <script th:src="|${pub_bucket}/js/plugins/ladda/spin.min.js|"></script>
+    <script th:src="|${pub_bucket}/js/plugins/ladda/ladda.min.js|"></script>
+    <script th:src="|${pub_bucket}/js/plugins/ladda/ladda.jquery.min.js|"></script>
+    
+    <script th:src="|${pub_bucket}/js/plugins/select2/select2.full.min.js|"></script>
+	<script>
+		$(document).ready(function() {
+
+			$('#loading-example-btn').click(function() {
+				btn = $(this);
+				simpleLoad(btn, true)
+				simpleLoad(btn, false)
+			});
+		});
+
+		function simpleLoad(btn, state) {
+			if (state) {
+				btn.children().addClass('fa-spin');
+				btn.contents().last().replaceWith(" Loading");
+			} else {
+				setTimeout(function() {
+					btn.children().removeClass('fa-spin');
+					btn.contents().last().replaceWith(" 分组管理");
+				}, 2000);
+			}
+		}
+	</script>
+</body>
+
+<script type="text/javascript">
+$(function() {
+	var l = $(".ladda-button").ladda();
+	$('.i-checks').iCheck({
+        checkboxClass: 'icheckbox_square-green',
+        radioClass: 'iradio_square-green',
+    });
+	var check_gs = [];
+	$(".blick_g").on("ifChecked ifUnchecked", function(event) {
+		var id = $(this).attr("attr_id");
+		if (event.type == 'ifChecked') {
+            $(this).iCheck('check');
+            check_gs.push(id);
+        } else {
+        	$(this).iCheck('uncheck');
+        	check_gs.splice($.inArray(id, check_gs), 1);
+        }
+	});
+	
+	$(".do_query").on("click", function() {
+		var t_num = $.trim($("#t_num").val());
+		var o_num = $.trim($("#o_num").val());
+		location.href = '/trade/mgr/item?onum='+o_num+'&tnum='+t_num;
+	});
+	$(".refund").on("click", function() {
+		var toid = $(this).attr("attr_id");
+		//swal({title: "Error", text: "暂不支持交易订单单独退款", type: "error"});
+		swal({
+	        title: "确定进行订单退款操作吗?",
+	        type: "warning",
+	        showCancelButton: true,
+	        confirmButtonColor: "#DD6B55",
+	        confirmButtonText: "确定!",
+	        closeOnConfirm: false
+	    }, function () {
+	    	$.post('/trade/mgr/aj/refund_order',{toid:toid}, function(data) {
+	    		
+	    	});
+	        swal("Deleted!", "Your imaginary file has been deleted.", "success");
+	    });
+	});
+	
+	$(".do_getitem").on("click", function() {
+		var order_id = $(this).attr('order_num');
+		var oc = $(this).attr('oc');
+		url = '/trade/mgr/get_orderitem?order_id='+order_id+'&oc='+oc + '&' + new Date().getTime();
+		$.get(url, {}, function(data){
+		    if(data.available) {
+		    	var order = data.data;
+		    	if(oc=="1000"){
+		    	   var html = "";var pay_amount = "";
+		    	   $.each(order.items, function (i, item) {
+		    		 if(item.pic_url!=null&&item.pic_url!=""){
+		    			 item.pic_url = "http://pe1s.static.pdr365.com/" + item.pic_url;
+		    		 }else{
+		    			 item.pic_url = "";
+		    		 }
+		    		 html += "<tr><td></td><td class='gpimg'>" + "<img class='right_img' height='30' width='40' src=" + item.pic_url + "></td>";
+		    		 html += "<td>" + item.goods_name + "</td>";
+		    		 html += "<td>" + item.unit_amount/100 + "</td>";
+		    		 html += "<td>" + item.buy_num + "</td></tr>";
+		    	   });
+		    	   var htmls = "";
+		    	   htmls += "实付金额：" + order.pay_amount/100;
+		    	   $("#sto_item_goods").html(html);
+		    	   $("#control-label_goods").html(htmls);
+		           layer.open({
+					 area : ['50%', '70%'],
+					 type : 1,
+					 content : $("#whs_list_goods")
+				   });
+		    	}else if(oc=="8000"){
+		    		var order = data.data;
+		    		var html = "";
+			    	   $.each(order, function (i, item) {
+			    		 html += "<tr><td></td><td>" + item.cn + "</td>";
+			    		 html += "<td>" + item.levelname + "</td>";
+			    		 html += "<td>" + item.balance/100 + "</td></tr>";
+			    	   });
+			    	   $("#sto_item_crm").html(html);
+			           layer.open({
+						 area : ['50%', '70%'],
+						 type : 1,
+						 content : $("#whs_list_crm")
+					   });
+		    	}else if(oc=="8001"){
+		    		var order = data.data;
+		    		var html = "";
+			    	   $.each(order, function (i, item) {
+			    		 html += "<tr><td></td><td>" + item.card_no + "</td>";
+			    		 html += "<td>" + item.total_amount/100 + "</td>";
+			    		 html += "<td>" + item.pay_amount/100 + "</td>";
+			    		 html += "<td>" + item.pay_time + "</td></tr>";
+			    	   });
+			    	   $("#sto_item_crm_recharge").html(html);
+			           layer.open({
+						 area : ['50%', '70%'],
+						 type : 1,
+						 content : $("#whs_list_crm_recharge")
+					   });
+		    	}else if(oc=="2000"){
+		    		var order = data.data;
+		    		var html = "";var pay_amount = "";
+			    	   $.each(order, function (i, item) { 			    	
+			    		 pay_amount = item.pay_amount/100;
+			    		 $.each(item.ticketSeat, function (i1, item1) { 
+				    		 html += "<tr><td></td><td>" + item.hall_name + "</td>";
+				    		 html += "<td>" + item.film_name + "</td>";
+				    		 html += "<td>" + item1.seat_no + "</td>";
+				    		 html += "<td>" + item1.sale_fee/100 + "</td>";
+				    		 html += "<td>" + item1.handle_fee/100 + "</td></tr>";
+			    		 });
+			    	   });
+			    	   var htmls = "";
+			    	   htmls += "实付金额：" + pay_amount;
+			    	   $("#sto_item_ticketing_choose").html(html);
+			    	   $("#control-label_choose").html(htmls);
+			           layer.open({
+						 area : ['60%', '70%'],
+						 type : 1,
+						 content : $("#whs_list_ticketing_choose")
+					   });
+		    	}else if(oc=="2010"){
+		    		var order = data.data;
+		    		var html = "";var pay_amount = "";
+			    	   $.each(order, function (i, item) { 
+			    		 pay_amount = item.pay_amount/100;
+			    		 $.each(item.ticketSeat, function (i1, item1) { 
+				    		 html += "<tr><td></td><td>" + item.hall_name + "</td>";
+				    		 html += "<td>" + item.film_name + "</td>";
+				    		 html += "<td>" + item1.seat_no + "</td>";
+				    		 html += "<td>" + item1.sale_fee/100 + "</td>";
+				    		 html += "<td>" + item1.handle_fee/100 + "</td></tr>";
+			    		 });
+			    	   });
+			    	   var htmls = "";
+			    	   htmls += "实付金额：" + pay_amount;
+			    	   $("#sto_item_reserve_choose").html(html);
+			    	   $("#control-label_reserve").html(htmls);
+			           layer.open({
+						 area : ['60%', '70%'],
+						 type : 1,
+						 content : $("#whs_list_reserve_choose")
+					   });
+		    	}
+		    }else {
+		        var code = data.messages[0];
+		        layer.msg(code, {
+		            icon : 2
+		        });
+		    }
+		});	 
+	});
+});
+</script>
+
+</html>

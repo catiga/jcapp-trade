@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>[[${str}]] | 收银台日志管理</title>
+<link th:href="@{{sp}/css/bootstrap.min.css(sp=${pub_bucket})}" rel="stylesheet">
+<link th:href="@{{sp}/font-awesome/css/font-awesome.css(sp=${pub_bucket})}" rel="stylesheet">
+<link th:href="@{{sp}/css/animate.css(sp=${pub_bucket})}" rel="stylesheet">
+<link th:href="@{{sp}/css/style.css(sp=${pub_bucket})}" rel="stylesheet">
+<link th:href="|${pub_bucket}/css/plugins/iCheck/custom.css|" rel="stylesheet">
+<link th:href="|${pub_bucket}/css/plugins/jsTree/style.min.css|" rel="stylesheet">
+<link th:href="|${pub_bucket}/css/plugins/sweetalert/sweetalert.css|" rel="stylesheet">
+<link th:href="|${pub_bucket}/css/plugins/ladda/ladda-themeless.min.css|" rel="stylesheet">
+
+<link th:href="|${pub_bucket}/css/plugins/select2/select2.min.css|" rel="stylesheet">
+</head>
+
+<body>
+	<div id="wrapper">
+		<div th:replace="../common/nav"></div>
+		<div id="page-wrapper" class="gray-bg">
+			<div th:replace="../common/top"></div>
+			<div class="row wrapper border-bottom white-bg page-heading">
+				<div class="col-sm-4">
+					<h2>收银台日志管理</h2>
+					<ol class="breadcrumb">
+						<li><a href="javascript:;">Home</a></li>
+						<li><a href="/trade/cashier/index">收银台列表</a></li>
+						<li class="active"><strong>登录日志明细</strong></li>
+					</ol>
+				</div>
+			</div>
+
+			<div class="row">
+				<div class="col-lg-12 goods_area">
+					<div class="wrapper wrapper-content animated fadeInUp">
+						<div class="ibox">
+							<div class="ibox-content">
+								<div class="table-responsive">
+                                	<table class="table table-striped">
+										<thead>
+		                                    <tr>
+		                                    	<th>#</th>
+												<th>收银台编号</th>
+												<th>收银台名称</th>
+												<th>登入状态</th>
+												<th>登入时间</th>
+												<th>登出时间</th>
+												<th>IP</th>
+												<th>登入人</th>
+												<th>操作</th>
+		                                    </tr>
+	                                    </thead>
+										<tbody>
+											<tr th:each="st:${page.result}" th:attr_id="${st.id }">
+												<td class="check-mail">
+							                        <input type="checkbox" class="i-checks blick_g" th:attr_id="${st.id}">
+							                    </td>
+												<td>[[${st.ccsn }]]</td>
+												<td>[[${st.ccname }]]</td>
+												<td>
+													<span th:if="${st.ss=='10'}">登出</span>
+													<span th:if="${st.ss=='00'}">登入</span>
+												</td>
+												<td>[[${#dates.format(st.start_time, 'yyyy-MM-dd HH:mm:ss')}]]</td>
+												<td>[[${#dates.format(st.end_time, 'yyyy-MM-dd HH:mm:ss')}]]</td>
+												<td>[[${st.do_ip }]]</td>
+												<td>[[${st.uname }]]</td>
+												<td>
+													<button data-style="zoom-in" class="ladda-button btn btn-danger btn-sm quit_right" th:if="${st.ss=='00'}" th:attr_id="${st.id }"><i class="fa fa-rub"></i> 强制登出 </button>
+												</td>
+											</tr>
+										</tbody>
+									</table>
+									<div th:replace="../common/page"></div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div th:replace="../common/foot"></div>
+		</div>
+	</div>
+
+	<!-- Mainly scripts -->
+	<script th:src="@{{sp}/js/jquery-2.1.1.js(sp=${pub_bucket})}"></script>
+	<script th:src="@{{sp}/js/bootstrap.min.js(sp=${pub_bucket})}"></script>
+	<script th:src="@{{sp}/js/plugins/metisMenu/jquery.metisMenu.js(sp=${pub_bucket})}"></script>
+	<script th:src="@{{sp}/js/plugins/slimscroll/jquery.slimscroll.min.js(sp=${pub_bucket})}"></script>
+
+	<!-- Custom and plugin javascript -->
+	<script th:src="@{{sp}/js/inspinia.js(sp=${pub_bucket})}"></script>
+	<script th:src="@{{sp}/js/plugins/pace/pace.min.js(sp=${pub_bucket})}"></script>
+	<script th:src="|${pub_bucket}/js/plugins/jsTree/jstree.min.js|"></script>	
+	<script th:src="@{{sp}/third/layer3/layer.js(sp=${pub_bucket})}" type="text/javascript"></script>
+	<script th:src="|${pub_bucket}/js/plugins/sweetalert/sweetalert.min.js|"></script>
+	<!-- iCheck -->
+    <script th:src="|${pub_bucket}/js/plugins/iCheck/icheck.min.js|"></script>
+    
+    <!-- Ladda -->
+    <script th:src="|${pub_bucket}/js/plugins/ladda/spin.min.js|"></script>
+    <script th:src="|${pub_bucket}/js/plugins/ladda/ladda.min.js|"></script>
+    <script th:src="|${pub_bucket}/js/plugins/ladda/ladda.jquery.min.js|"></script>
+    
+    <script th:src="|${pub_bucket}/js/plugins/select2/select2.full.min.js|"></script>
+</body>
+
+<script type="text/javascript">
+$(function() {
+	$(".store").select2({placeholder:'选择交易门店',allowClear:true});
+	$(".trade_ss").select2({placeholder:'选择交易状态',allowClear:true});
+	
+	var l = $(".ladda-button").ladda();
+	$('.i-checks').iCheck({
+        checkboxClass: 'icheckbox_square-green',
+        radioClass: 'iradio_square-green',
+    });
+	var check_gs = [];
+	$(".blick_g").on("ifChecked ifUnchecked", function(event) {
+		var id = $(this).attr("attr_id");
+		if (event.type == 'ifChecked') {
+            $(this).iCheck('check');
+            check_gs.push(id);
+        } else {
+        	$(this).iCheck('uncheck');
+        	check_gs.splice($.inArray(id, check_gs), 1);
+        }
+	});
+	
+	$(".do_query").on("click", function() {
+	});
+	
+	$(".quit_right").on("click", function() {
+		var $this = $(this);
+		swal({
+	        title: "确定进行登出操作吗?",
+	        text: "操作将使收银员不可使用该收银台!",
+	        type: "warning",
+	        showCancelButton: true,
+	        confirmButtonColor: "#DD6B55",
+	        confirmButtonText: "仍然登出!",
+	        closeOnConfirm: true
+	    }, function () {
+	    	$this.ladda('start');
+	    	$.post('/trade/cashier/aj/quit_right', {id:$this.attr("attr_id")}, function(data) {
+	    		$this.ladda('stop');
+	    		if(data.available) {
+	    			swal({title: "操作成功!", text: "收银台已恢复可用状态.", type: "success"}, function() {
+						location.reload();
+					});
+	    		} else {
+	    			var code = data.messages[0];
+					if(data.messages.length>1) {
+						code = data.messages[1] + "，" + code; 
+					}
+					var msg = "操作失败：" + code;
+					layer.msg(msg, {shift: 6});
+	    		}
+	    	});
+	    });
+	});
+});
+</script>
+</html>

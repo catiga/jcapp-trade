@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>[[${str}]] | 发票信息管理</title>
+<link th:href="@{{sp}/css/bootstrap.min.css(sp=${pub_bucket})}" rel="stylesheet">
+<link th:href="@{{sp}/font-awesome/css/font-awesome.css(sp=${pub_bucket})}" rel="stylesheet">
+<link th:href="@{{sp}/css/animate.css(sp=${pub_bucket})}" rel="stylesheet">
+<link th:href="@{{sp}/css/style.css(sp=${pub_bucket})}" rel="stylesheet">
+<link th:href="|${pub_bucket}/css/plugins/iCheck/custom.css|" rel="stylesheet">
+<link th:href="|${pub_bucket}/css/plugins/jsTree/style.min.css|" rel="stylesheet">
+<link th:href="|${pub_bucket}/css/plugins/sweetalert/sweetalert.css|" rel="stylesheet">
+<link th:href="|${pub_bucket}/css/plugins/ladda/ladda-themeless.min.css|" rel="stylesheet">
+
+<link th:href="|${pub_bucket}/css/plugins/select2/select2.min.css|" rel="stylesheet">
+</head>
+
+<body>
+	<div id="wrapper">
+		<div th:replace="../common/nav"></div>
+		<div id="page-wrapper" class="gray-bg">
+			<div th:replace="../common/top"></div>
+			<div class="row wrapper border-bottom white-bg page-heading">
+				<div class="col-sm-4">
+					<h2>发票信息配置</h2>
+					<ol class="breadcrumb">
+						<li><a href="javascript:;">Home</a></li>
+						<li class="active"><strong>系统发票列表</strong></li>
+					</ol>
+				</div>
+			</div>
+
+			<div class="row">
+				<div class="col-lg-12 goods_area">
+					<div class="wrapper wrapper-content animated fadeInUp">
+						<div class="ibox">
+							<div class="ibox-title">
+								<h5>系统发票设置列表</h5>
+								<div class="ibox-tools">
+									<a href="javascript:void(0)" class="btn btn-primary btn-xs add_invo_set ladda-button">添加发票设置</a>
+								</div>
+							</div>
+							<div class="ibox-content">
+								<div class="table-responsive">
+                                	<table class="table table-striped">
+										<thead>
+		                                    <tr>
+		                                    	<th>#</th>
+												<th>收款单位</th>
+												<th>税号</th>
+												<th>开户银行</th>
+												<th>开户账号</th>
+												<th>税率</th>
+												<th>操作</th>
+		                                    </tr>
+	                                    </thead>
+										<tbody>
+											<tr th:each="st:${invoice_sets}">
+												<td class="check-mail">
+							                        <input type="checkbox" class="i-checks blick_g" th:attr_id="${st.id}" th:checked="${st.id!=null }?'checked'">
+							                    </td>
+							                    <td>[[${st.unit_name}]]</td>
+							                    <td>[[${st.unit_tax}]]</td>
+							                    <td>[[${st.unit_bank}]]</td>
+							                    <td>[[${st.unit_account}]]</td>
+							                    <td>[[${st.tax_fee}]]</td>
+							                    <td>
+							                    	<button data-style="zoom-in" class="ladda-button btn btn-primary btn-sm edit" th:attr_id="${st.id }"><i class="fa fa-ticket"></i> 编辑 </button>
+													<button data-style="zoom-in" class="ladda-button btn btn-danger btn-sm remove" th:attr_id="${st.id }"><i class="fa fa-rub"></i> 删除 </button>
+							                    </td>
+											</tr>
+										</tbody>
+									</table>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div th:replace="../common/foot"></div>
+		</div>
+	</div>
+	
+	
+	
+	<div id="templatemo-preferences-form" style="display:none;padding-left:15px;padding-right:15px">
+		<div class="row">
+			<div class="col-md-12 margin-bottom-15">
+				<label class="control-label" for="unit_name">收款单位</label> 
+				<input type="text" class="form-control" id="unit_name" placeholder="请输入收款单位">
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-md-12 margin-bottom-15">
+				<label class="control-label" for="unit_addr">地址</label> 
+				<input type="text" class="form-control" id="unit_addr" placeholder="请输入收款单位地址信息">
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-md-12 margin-bottom-15">
+				<label class="control-label" for="unit_phone">联系电话</label> 
+				<input type="text" class="form-control" id="unit_phone" placeholder="请输入收款单位联系电话">
+			</div>
+		</div>
+		
+		<div class="row">
+			<div class="col-md-6 margin-bottom-15">
+				<label for="unit_tax" class="control-label">税号</label>
+				<input type="text" class="form-control" id="unit_tax" placeholder="请输入税号">
+			</div>
+			<div class="col-md-6 margin-bottom-15">
+				<label for="tax_fee" class="control-label">默认税率</label>
+				<input type="text" class="form-control" id="tax_fee" placeholder="请输入默认税率">
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-md-12 margin-bottom-15">
+				<label for="unit_bank" class="control-label">开户银行</label>
+				<input type="text" class="form-control" id="unit_bank" placeholder="请输入开户银行">
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-md-12 margin-bottom-15">
+				<label for="unit_account" class="control-label">开户账号</label>
+				<input type="text" class="form-control" id="unit_account" placeholder="请输入开户账号">
+			</div>
+		</div>
+		<div class="row templatemo-form-buttons" style="margin-top:15px;">
+			<div class="col-md-12">
+				<button data-style="zoom-in" class="ladda-button btn btn-primary save_info" style="width:100%">保存</button>
+			</div>
+		</div>
+	</div>
+	
+	
+
+	<!-- Mainly scripts -->
+	<script th:src="@{{sp}/js/jquery-2.1.1.js(sp=${pub_bucket})}"></script>
+	<script th:src="@{{sp}/js/bootstrap.min.js(sp=${pub_bucket})}"></script>
+	<script th:src="@{{sp}/js/plugins/metisMenu/jquery.metisMenu.js(sp=${pub_bucket})}"></script>
+	<script th:src="@{{sp}/js/plugins/slimscroll/jquery.slimscroll.min.js(sp=${pub_bucket})}"></script>
+
+	<!-- Custom and plugin javascript -->
+	<script th:src="@{{sp}/js/inspinia.js(sp=${pub_bucket})}"></script>
+	<script th:src="@{{sp}/js/plugins/pace/pace.min.js(sp=${pub_bucket})}"></script>
+	<script th:src="|${pub_bucket}/js/plugins/jsTree/jstree.min.js|"></script>	
+	<script th:src="@{{sp}/third/layer3/layer.js(sp=${pub_bucket})}" type="text/javascript"></script>
+	<script th:src="|${pub_bucket}/js/plugins/sweetalert/sweetalert.min.js|"></script>
+	<!-- iCheck -->
+    <script th:src="|${pub_bucket}/js/plugins/iCheck/icheck.min.js|"></script>
+    
+    <!-- Ladda -->
+    <script th:src="|${pub_bucket}/js/plugins/ladda/spin.min.js|"></script>
+    <script th:src="|${pub_bucket}/js/plugins/ladda/ladda.min.js|"></script>
+    <script th:src="|${pub_bucket}/js/plugins/ladda/ladda.jquery.min.js|"></script>
+    
+    <script th:src="|${pub_bucket}/js/plugins/select2/select2.full.min.js|"></script>
+	<script>
+		$(document).ready(function() {
+
+			$('.loading-example-btn').click(function() {
+				btn = $(this); var text = $.trim(btn.text());
+				simpleLoad(btn, text, true)
+				$(".tyc_code").each(function() {
+					if(btn.attr('tyc')==$(this).attr('tyc')) {
+						$(this).show();
+					} else {
+						$(this).hide();
+					}
+				});
+				simpleLoad(btn, text, false)
+			});
+			$('.loading-example-btn').eq(0).trigger('click');
+		});
+
+		function simpleLoad(btn, text, state) {
+			if (state) {
+				btn.children().addClass('fa-spin');
+				btn.contents().last().replaceWith(" Loading");
+			} else {
+				setTimeout(function() {
+					btn.children().removeClass('fa-spin');
+					btn.contents().last().replaceWith(' ' + text);
+				}, 200);
+			}
+		}
+	</script>
+</body>
+
+<script type="text/javascript">
+$(function() {
+	var l = $(".ladda-button").ladda();
+	$('.i-checks').iCheck({
+        checkboxClass: 'icheckbox_square-green',
+        radioClass: 'iradio_square-green',
+    });
+	
+	$(".blick_g").on("ifChecked ifUnchecked", function(event) {
+		var id = $(this).attr("attr_id");
+		var tyc = $(this).attr("attr_tyc");
+		var code = $(this).attr("attr_code");
+		if (event.type == 'ifChecked') {
+            $(this).iCheck('check');
+        } else {
+        	$(this).iCheck('uncheck');
+        }
+		$.get('/trade/pt/aj/doswitch',{id:id,tyc:tyc,code:code}, function(data) {
+			console.log(data);
+		});
+	});
+	$(".add_invo_set").on("click", function() {
+		$("#unit_name").val('');
+		$("#unit_tax").val('');
+		$("#tax_fee").val('');
+		$("#unit_bank").val('');
+		$("#unit_account").val('');
+		$("#unit_addr").val('');
+		$("#unit_phone").val('');
+		layer.open({
+			area : [ '70%', '80%' ],
+			type : 1,
+			content : $("#templatemo-preferences-form")
+		});
+	});
+	var id = 0;
+	$(".edit").on("click", function() {
+		var $this = $(this);
+		$this.ladda('start');
+		$.get('/trade/pt/aj/view_invoice_set', {id:$this.attr('attr_id')}, function(data) {
+			$this.ladda('stop');
+			if(data.available) {
+				id = data.data.id;
+				$("#unit_name").val(data.data.unit_name);
+				$("#unit_tax").val(data.data.unit_tax);
+				$("#tax_fee").val(data.data.tax_fee);
+				$("#unit_bank").val(data.data.unit_bank);
+				$("#unit_account").val(data.data.unit_account);
+				$("#unit_addr").val(data.data.unit_addr);
+				$("#unit_phone").val(data.data.unit_phone);
+				layer.open({
+					area : [ '70%', '80%' ],
+					type : 1,
+					content : $("#templatemo-preferences-form")
+				});
+			} else {
+				var code = data.messages[0];
+				var msg = '操作失败：' + code;
+				layer.msg(msg, {icon: 2});
+			}
+		});
+	});
+	$(".save_info").on("click", function() {
+		var unit_name = $.trim($("#unit_name").val());
+		var unit_tax = $.trim($("#unit_tax").val());
+		var tax_fee = $.trim($("#tax_fee").val());
+		var unit_bank = $.trim($("#unit_bank").val());
+		var unit_account = $.trim($("#unit_account").val());
+		var unit_phone = $.trim($("#unit_phone").val());
+		var unit_addr = $.trim($("#unit_addr").val());
+		var params = {unit_name:unit_name,unit_tax:unit_tax,tax_fee:tax_fee,unit_bank:unit_bank,unit_account:unit_account,id:id,unit_addr:unit_addr,unit_phone:unit_phone};
+		var $this = $(this);
+		$this.ladda('start');
+		$.post('/trade/pt/aj/save_invoice_set', params, function(data) {
+			$this.ladda('stop'); layer.closeAll();
+			if(data.available) {
+				swal({title: "操作成功!", text: "发票设置信息已保存!", type: "success" }, function() {
+					location.reload();
+				});
+
+			} else {
+				var code = data.messages[0];
+				var msg = '操作失败：' + code;
+				layer.msg(msg, {icon: 2});
+			}
+		});
+	});
+	
+	$(".remove").on("click", function() {
+		var $this = $(this);
+		swal({
+	        title: "确定删除发票设置数据吗?",
+	        //text: "You will not be able to recover this imaginary file!",
+	        type: "warning",
+	        showCancelButton: true,
+	        confirmButtonColor: "#DD6B55",
+	        confirmButtonText: "确定",
+	        closeOnConfirm: true
+	    }, function () {
+			$this.ladda('start');
+			$.get('/trade/pt/aj/remove_invoice_set', {id:$this.attr('attr_id')}, function(data) {
+				$this.ladda('stop');
+				if(data.available) {
+					$this.parent().parent().fadeOut();
+				} else {
+					var code = data.messages[0];
+					var msg = '操作失败：' + code;
+					layer.msg(msg, {icon: 2});
+				}
+			});
+	    });
+	});
+});
+</script>
+
+</html>
