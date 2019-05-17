@@ -148,9 +148,12 @@ $(function() {
 	    	$.post('/trade/cashier/aj/quit_right', {id:$this.attr("attr_id")}, function(data) {
 	    		$this.ladda('stop');
 	    		if(data.available) {
-	    			swal({title: "操作成功!", text: "收银台已恢复可用状态.", type: "success"}, function() {
-						location.reload();
-					});
+	    			layer.alert('操作成功', {
+				        skin: 'layui-layer-lan',
+				        shift: 4 //动画类型
+				    }, function(){
+				    	location.reload();
+				    });
 	    		} else {
 	    			var code = data.messages[0];
 					if(data.messages.length>1) {

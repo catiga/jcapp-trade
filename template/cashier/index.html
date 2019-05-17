@@ -119,6 +119,7 @@
 												</td>
 												<td>
 													<button data-style="zoom-in" class="ladda-button btn btn-info btn-sm view_log" th:id="${st.id }"><i class="fa fa-ticket"></i> 查看 </button>
+													<button th:if="${st.inuse==1}" data-style="zoom-in" class="ladda-button btn btn-danger btn-sm restore" th:id="${st.id }"><i class="fa fa-ticket"></i> 登出 </button>
 												</td>
 											</tr>
 										</tbody>
@@ -422,6 +423,41 @@ $(function() {
 				location.reload();
 			}
 		});
+	});
+	
+	$(".restore").on("click", function() {
+		let cash_id = $(this).attr('id');
+		let $this = $(this);
+		swal({
+	        title: "确定进行登出操作吗?",
+	        text: "操作将使收银员不可使用该收银台!",
+	        type: "warning",
+	        showCancelButton: true,
+	        confirmButtonColor: "#DD6B55",
+	        confirmButtonText: "仍然登出!",
+	        closeOnConfirm: true
+	    }, function () {
+	    	$this.ladda('start');
+	    	$.post('/trade/cashier/aj/quit_right_all', {id:cash_id}, function(data) {
+	    		console.log(data);
+	    		$this.ladda('stop');
+	    		if(data.available) {
+	    			layer.alert('操作成功', {
+				        skin: 'layui-layer-lan',
+				        shift: 4 //动画类型
+				    }, function(){
+				    	location.reload();
+				    });
+	    		} else {
+	    			var code = data.messages[0];
+					if(data.messages.length>1) {
+						code = data.messages[1] + "，" + code; 
+					}
+					var msg = "操作失败：" + code;
+					layer.msg(msg, {shift: 6});
+	    		}
+	    	});
+	    });
 	});
 });
 </script>
