@@ -439,7 +439,6 @@ $(function() {
 	    }, function () {
 	    	$this.ladda('start');
 	    	$.post('/trade/cashier/aj/quit_right_all', {id:cash_id}, function(data) {
-	    		console.log(data);
 	    		$this.ladda('stop');
 	    		if(data.available) {
 	    			layer.alert('操作成功', {
