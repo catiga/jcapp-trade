@@ -15,5 +15,8 @@ String domain = req.getServerName();
 SysProjectInfo project = NativeUtil.connect(SysProjectInfo.class, 'project', '/incall/project', ["domain":domain]);
 GlobalHolder.setProj(project);
 req.setAttribute("current_project", project)
-req.setAttribute('pub_bucket', 'https://cdn.iplaysky.com/static/');
+
+//req.setAttribute('pub_bucket', 'https://cdn.iplaysky.com/static/');
+req.setAttribute('pub_bucket', 'https://static.pdr365.com/static/');
+
 return true;
