@@ -74,11 +74,11 @@
 												<div th:if="${tss!='0000'}"><td>[[${st.pay_amount/100}]]</td></div>
 												<td>[[${st.storename}]]</td>
 												<td>
-												    <span th:if="${st.oc=='1000'}"><a class="do_getitem" th:attr="order_num=${st.order_num },oc=${st.oc}">商品订单详情</a></span>
-							                    	<span th:if="${st.oc=='8000'}"><a class="do_getitem" th:attr="order_num=${st.order_num },oc=${st.oc}">会员开卡订单详情</a></span>
-							                    	<span th:if="${st.oc=='8001'}"><a class="do_getitem" th:attr="order_num=${st.order_num },oc=${st.oc}">会员卡充值订单详情</a></span>
-							                    	<span th:if="${st.oc=='2000'}"><a class="do_getitem" th:attr="order_num=${st.order_num },oc=${st.oc}">选座订单详情</a></span>
-							                    	<span th:if="${st.oc=='2010'}"><a class="do_getitem" th:attr="order_num=${st.order_num },oc=${st.oc}">预约选座订单</a></span>
+												    <span th:if="${st.oc=='1000'}"><a class="do_getitem" th:attr="order_id=${st.order_id},order_num=${st.order_num },oc=${st.oc}">商品订单详情</a></span>
+							                    	<span th:if="${st.oc=='8000'}"><a class="do_getitem" th:attr="order_id=${st.order_id},order_num=${st.order_num },oc=${st.oc}">会员开卡订单详情</a></span>
+							                    	<span th:if="${st.oc=='8001'}"><a class="do_getitem" th:attr="order_id=${st.order_id},order_num=${st.order_num },oc=${st.oc}">会员卡充值订单详情</a></span>
+							                    	<span th:if="${st.oc=='2000'}"><a class="do_getitem" th:attr="order_id=${st.order_id},order_num=${st.order_num },oc=${st.oc}">选座订单详情</a></span>
+							                    	<span th:if="${st.oc=='2010'}"><a class="do_getitem" th:attr="order_id=${st.order_id},order_num=${st.order_num },oc=${st.oc}">预约选座订单</a></span>
 							                    </td>
 												<!-- <td> 
 													<button data-style="zoom-in" class="ladda-button btn btn-danger btn-sm refund" th:attr_id="${st.id }"><i class="fa fa-rub"></i> 退款 </button>
@@ -292,9 +292,10 @@ $(function() {
 	});
 	
 	$(".do_getitem").on("click", function() {
-		var order_id = $(this).attr('order_num');
+		var order_num = $(this).attr('order_num');
 		var oc = $(this).attr('oc');
-		url = '/trade/mgr/get_orderitem?order_id='+order_id+'&oc='+oc + '&' + new Date().getTime();
+		let order_id = $(this).attr('order_id');
+		url = '/trade/mgr/get_orderitem?order_id='+order_id+'&oc='+oc+'&order_no='+order_num;
 		$.get(url, {}, function(data){
 		    if(data.available) {
 		    	var order = data.data;
