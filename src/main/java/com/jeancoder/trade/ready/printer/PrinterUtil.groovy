@@ -112,6 +112,11 @@ class PrinterUtil {
 			def seat_ss_sc = s['seat_sc'];
 			def seat_ss_price = s['sale_fee'];
 			
+			def seat_class_name = s['tclass_name'];
+			if(!seat_class_name) {
+				seat_class_name = '票类名称';
+			}
+			
 			seat_ss_price = MoneyUtil.divide(seat_ss_price + '', '100');
 			
 			base_smarttemplate = base_smarttemplate.replace('[[store_name]]', store_name);
@@ -122,6 +127,8 @@ class PrinterUtil {
 			base_smarttemplate = base_smarttemplate.replace('[[plan_date]]', plan_date);
 			base_smarttemplate = base_smarttemplate.replace("[[ticket_seat]]", seat_ss_sr + '排' + seat_ss_sc + '座');
 			base_smarttemplate = base_smarttemplate.replace("[[ticket_price]]", seat_ss_price);
+			
+			base_smarttemplate = base_smarttemplate.replace("[[ticket_type]]", seat_class_name);
 			
 			base_smarttemplate = URLEncoder.encode(base_smarttemplate, 'UTF-8');
 			base_smarttemplate = URLEncoder.encode(base_smarttemplate, 'UTF-8');
