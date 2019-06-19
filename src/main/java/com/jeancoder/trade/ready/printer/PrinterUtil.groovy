@@ -77,6 +77,9 @@ class PrinterUtil {
 		return printerDto;
 	}
 	
+	/*
+	 * ticket_type  票类名称
+	 */
 	static def fill_ticket_printer_dto(TradeInfo trade, TradeOrder trade_order, PrinterDto printer_dto) {
 		//开始去票务获取详细订单信息
 		SimpleAjax ret_tickets = JC.internal.call(SimpleAjax, 'ticketingsys', '/ticketing/ticket_order_detail', [order_id:trade_order.order_id]);
