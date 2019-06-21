@@ -47,9 +47,9 @@ class RefundService {
 		} else if(ct=='201002') {
 			other_param.put("ctcode", "201002");
 			return refund_wx(config, trade, pay_info, other_param);
-		} else if(ct=='2201102') {
+		} else if(ct=='201102') {
 			//微信支付小程序
-			other_param.put("ctcode", "2201102");
+			other_param.put("ctcode", "201102");
 			return refund_wx(config, trade, pay_info, other_param);
 		} else if(ct=='101001') {
 			other_param.put("ctcode", "101001");

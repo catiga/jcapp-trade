@@ -3,8 +3,10 @@ package com.jeancoder.trade.entry.mgr.aj
 import java.sql.Timestamp
 
 import com.jeancoder.app.sdk.JC
+import com.jeancoder.app.sdk.source.LoggerSource
 import com.jeancoder.app.sdk.source.RequestSource
 import com.jeancoder.core.http.JCRequest
+import com.jeancoder.core.log.JCLogger
 import com.jeancoder.jdbc.JcTemplate
 import com.jeancoder.trade.ready.SimpleAjax
 import com.jeancoder.trade.ready.dto.PayResult
@@ -17,6 +19,8 @@ import com.jeancoder.trade.ready.ser.TradeService
 import com.jeancoder.trade.ready.ser.TriggerService
 import com.jeancoder.trade.ready.unipay.RefundService
 import com.jeancoder.trade.ready.util.GlobalHolder
+
+JCLogger logger = LoggerSource.getLogger();
 
 TradeService trade_service = TradeService.INSTANCE();
 TriggerService trigger_service = TriggerService.INSTANCE();
