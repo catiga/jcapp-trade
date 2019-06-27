@@ -63,6 +63,11 @@ class RefundService {
 			//支付宝被扫退款
 			other_param.put('ctcode', '202001');
 			pay_result = refund_alipay(config, trade, pay_info, other_param);
+		} else if(ct.toString().startsWith('900')){
+			//按照自定义支付方式退款，先进退款
+			other_param.put("ctcode", ct);
+			//现金支付
+			pay_result = refund_cash(config, trade, pay_info, other_param);
 		}
 		return pay_result;
 	}
