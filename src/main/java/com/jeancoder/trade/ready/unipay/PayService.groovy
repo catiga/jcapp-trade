@@ -211,6 +211,10 @@ class PayService {
 	}
 	
 	def scan_wxpay(ProjectGeneralConfig config, def ct, def unicode, TradeInfo trade) {
+		//处理一下unicode
+		if(unicode.toString().length()>18) {
+			unicode = unicode.toString().substring(0, 18);
+		}
 		def url = 'https://api.mch.weixin.qq.com/pay/micropay';
 		def sign_type = 'MD5';
 		def fee_type = 'CNY';
