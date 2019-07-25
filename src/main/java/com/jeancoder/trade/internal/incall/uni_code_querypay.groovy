@@ -1,8 +1,8 @@
 package com.jeancoder.trade.internal.incall
 
 import com.jeancoder.app.sdk.JC
+import com.jeancoder.app.sdk.source.LoggerSource
 import com.jeancoder.core.log.JCLogger
-import com.jeancoder.core.log.JCLoggerFactory
 import com.jeancoder.core.util.JackSonBeanMapper
 import com.jeancoder.trade.ready.SimpleAjax
 import com.jeancoder.trade.ready.dto.PayResult
@@ -23,7 +23,8 @@ import com.jeancoder.trade.ready.util.DateUtil
 import com.jeancoder.trade.ready.util.MD5Util
 import com.jeancoder.trade.ready.util.XMLUtil
 
-JCLogger logger = JCLoggerFactory.getLogger('pay_result_query');
+//JCLogger logger = JCLoggerFactory.getLogger('pay_result_query');
+JCLogger logger = LoggerSource.getLogger('pay_result_query');
 
 def tnum = JC.internal.param('tnum');
 def token = JC.internal.param('token');
@@ -53,8 +54,10 @@ if(trade_pays != null && !trade_pays.isEmpty()) {
 	
 	def ccid = null;
 	if (trade.log_id != null)  {
-		CashDoLog log = CashierService.INSTANCE.get_counter_by_token(trade.log_id);
-		ccid = log.ccid;
+		//CashDoLog log = CashierService.INSTANCE.get_counter_by_token(trade.log_id);
+		CashDoLog log = CashierService.INSTANCE.get_counter_by_id(trade.log_id);
+		if(log!=null)
+			ccid = log.ccid;
 	}
 	//获取打印模板
 	def smarttemplate = "<html></html>";

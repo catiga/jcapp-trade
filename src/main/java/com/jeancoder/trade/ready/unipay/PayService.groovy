@@ -1,8 +1,8 @@
 package com.jeancoder.trade.ready.unipay
 
 import com.jeancoder.app.sdk.JC
+import com.jeancoder.app.sdk.source.LoggerSource
 import com.jeancoder.core.log.JCLogger
-import com.jeancoder.core.log.JCLoggerFactory
 import com.jeancoder.core.util.JackSonBeanMapper
 import com.jeancoder.trade.ready.dto.PayResult
 import com.jeancoder.trade.ready.dto.ProjectGeneralConfig
@@ -22,7 +22,8 @@ class PayService {
 
 	private static final PayService _instance_ = new PayService();
 	
-	JCLogger LOGGER = JCLoggerFactory.getLogger(PayService.class.getName());
+	//JCLogger LOGGER = JCLoggerFactory.getLogger(PayService.class.getName());
+	JCLogger LOGGER = LoggerSource.getLogger();
 	
 	TradeService trade_service = TradeService.INSTANCE();
 	
@@ -201,6 +202,9 @@ class PayService {
 			
 			trade_service.save_trade_pay_data(trade, [pay_result, pay_data_map]);
 			return pay_result;
+		} else if(return_code=='10003') {
+			//需要用户输入密码
+			pay_result.text = '等待用户输入支付密码';
 		}
 		
 		return pay_result;
@@ -300,9 +304,14 @@ class PayService {
 			
 			String err_code = ret_map.get('err_code');
 			String err_code_desc = ret_map.get('err_code_des');
-			if(err_code=='USERPAYING') {
-				pay_result.code = '1';
-				pay_result.text = err_code_desc;
+			if(err_code) {
+				if(err_code=='USERPAYING') {
+					pay_result.code = '1';
+					pay_result.text = err_code_desc;
+				} else {
+					pay_result.code = '1';
+					pay_result.text = err_code_desc;
+				}
 			}
 			pay_result.text = return_msg;
 			pay_result.err_code = err_code;
