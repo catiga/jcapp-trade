@@ -108,8 +108,10 @@ if(ret_data == null || ret_data.code!='0') {
 
 def ccid = null;
 if (trade.log_id != null)  {
-	CashDoLog log = CashierService.INSTANCE.get_counter_by_token(trade.log_id);
-	ccid = log.ccid;
+	//CashDoLog log = CashierService.INSTANCE.get_counter_by_token(trade.log_id);
+	CashDoLog log = CashierService.INSTANCE.get_counter_by_id(trade.log_id);
+	if(log!=null)
+		ccid = log.ccid;
 }
 //获取打印模板
 def smarttemplate = "<html></html>";
