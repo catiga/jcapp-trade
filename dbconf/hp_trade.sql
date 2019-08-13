@@ -171,10 +171,10 @@ CREATE TABLE `trade_cashier_counter`  (
 -- ----------------------------
 -- Records of trade_cashier_counter
 -- ----------------------------
-INSERT INTO `trade_cashier_counter` VALUES (1, '1001', '封阳', '前台售票厅1', 1, 1, '花果山球幕', '2019-04-22 23:40:56', '2019-04-28 18:02:41', 0, 0, '1000');
-INSERT INTO `trade_cashier_counter` VALUES (2, '1002', '周雪颖', '002', 1, 1, '猴王归来', '2019-04-24 18:11:30', '2019-04-28 16:40:26', 0, 0, '1000');
-INSERT INTO `trade_cashier_counter` VALUES (3, '1003', '王艺桦', '', 1, 1, '猴王归来', '2019-04-25 14:10:46', '2019-04-28 18:02:22', 0, 1, '1000');
-INSERT INTO `trade_cashier_counter` VALUES (4, '1004', '前台售票4', '', 1, 1, '猴王归来', '2019-04-25 14:18:28', '2019-04-28 13:48:59', 0, 1, '1000');
+INSERT INTO `trade_cashier_counter` VALUES (1, '1001', '收银台1', '前台销售', 1, 1, '花果山球幕', '2019-04-22 23:40:56', '2019-04-28 18:02:41', 0, 0, '1000');
+INSERT INTO `trade_cashier_counter` VALUES (2, '1002', '收银台2', '002', 1, 1, '猴王归来', '2019-04-24 18:11:30', '2019-04-28 16:40:26', 0, 0, '1000');
+INSERT INTO `trade_cashier_counter` VALUES (3, '1003', '收银台3', '', 1, 1, '猴王归来', '2019-04-25 14:10:46', '2019-04-28 18:02:22', 0, 1, '1000');
+INSERT INTO `trade_cashier_counter` VALUES (4, '1004', '收银台4', '', 1, 1, '猴王归来', '2019-04-25 14:18:28', '2019-04-28 13:48:59', 0, 1, '1000');
 
 -- ----------------------------
 -- Table structure for trade_info
@@ -333,12 +333,5 @@ CREATE TABLE `trade_trigger_rog`  (
   PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 5 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
 
--- ----------------------------
--- Records of trade_trigger_rog
--- ----------------------------
-INSERT INTO `trade_trigger_rog` VALUES (1, 'ticketingsys', '/incall/order/notify', '79c2c627a27e2694560b9586b05d76088beecda5b42f5b454c7c84daac129f43', NULL, 0, '2019-04-22 23:42:32', '2019-04-22 23:42:32', 11750400, '2000');
-INSERT INTO `trade_trigger_rog` VALUES (2, 'ticketingsys', '/incall/order/notify', 'c7517d0158108869ecc339be215e890afa3f62b92dae28b8aaa85ab76b6ece2e', NULL, 0, '2019-04-22 23:42:32', '2019-04-22 23:42:32', 9158400, '2010');
-INSERT INTO `trade_trigger_rog` VALUES (3, 'crm', '/api/order/recharge', 'a05e8acee698d57ba91381b0b25fd45d826bcc9be04b047e20ca0446b9b4fd8d', NULL, 0, '2019-04-23 10:43:47', '2019-04-23 10:43:47', 15033600, '8001');
-INSERT INTO `trade_trigger_rog` VALUES (4, 'crm', '/api/order/createOrder', '6fc214b24ea2ede774f3a552fd23bc10bcd0b04226dd726e648e39be7959dddc', NULL, 0, '2019-04-23 10:43:47', '2019-04-23 10:43:47', 17107200, '8000');
 
 SET FOREIGN_KEY_CHECKS = 1;
