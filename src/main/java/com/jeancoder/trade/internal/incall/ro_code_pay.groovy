@@ -138,8 +138,11 @@ JcTemplate.INSTANCE().update(trade);
 // 清空卡劵
 SimpleAjax clear_coupon_result = NativeUtil.connect(SimpleAjax, 'market', '/coupon/clear_coupon_info', [pid:trade.pid.toString(),orders:orders]);
 if (clear_coupon_result == null || !clear_coupon_result.available) {
-	def msg = clear_coupon_result == null?'清空优惠信息失败':clear_coupon_result.messages[0];
-	return SimpleAjax.notAvailable(msg);
+//	def msg = clear_coupon_result == null?'清空优惠信息失败':clear_coupon_result.messages[0];
+//	return SimpleAjax.notAvailable(msg);
+	if(clear_coupon_result!=null) {
+		LOGGER.error('trade_num=' + trade.tnum + ' coupon clear result:::' + clear_coupon_result.messages[0]);
+	}
 }
 
 /** 开始计算优惠 **/
