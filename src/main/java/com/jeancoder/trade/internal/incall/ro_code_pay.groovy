@@ -56,6 +56,9 @@ def coupon_id = JC.internal.param('coupon_id');
 def o_rem = JC.internal.param('o_rem')?.trim();
 def domain = JC.internal.param('domain')?.trim();
 def ap_id = JC.internal.param('ap_id');
+
+def addr_id = JC.internal.param('addr_id');
+
 try {
 	ap_id = new BigInteger(ap_id);
 } catch(any) {
@@ -63,7 +66,7 @@ try {
 }
 
 JCLogger LOGGER = JCLoggerFactory.getLogger('ro_code_pay');
-
+LOGGER.info(addr_id);
 PayResult ret_data = new PayResult();
 
 TradeService trade_service = TradeService.INSTANCE();
@@ -155,16 +158,14 @@ def mc_data = null;
 for(x in trade_orders) {
 	if(x.oc=='1000') {
 		//针对商品订单，更新备注信息
-		if(o_rem) {
-			JC.thread.run(5000, {
-				def update_result = JC.internal.call('scm', '/order/update_remark', [pid:pid,o_rem:o_rem,o_id:x.order_id]);
-				return update_result;
-			}, {
-				e->
-				println e.success;
-				println e.data;
-			});
-		}
+		JC.thread.run(5000, {
+			def update_result = JC.internal.call('scm', '/order/update_remark', [pid:pid,o_rem:o_rem,o_id:x.order_id,addr_id:addr_id]);
+			return update_result;
+		}, {
+			e->
+			println e.success;
+			println e.data;
+		});
 		//支持商品价格计算
 		if(unicode) {
 			//计算会员卡价格
