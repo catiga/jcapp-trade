@@ -31,6 +31,8 @@ def unicode = JC.internal.param('unicode')?.toString()?.trim();
 def ct = JC.internal.param('ct')?.toString()?.trim();
 def coupons = JC.internal.param('coupons')?.toString()?.trim();
 
+def mobile = JC.internal.param('mobile')?.toString()?.trim();
+
 JCLogger logger = LoggerSource.getLogger(this.getClass());
 //设计好计算顺序
 println 'coupons=' + coupons;
@@ -131,21 +133,19 @@ for(x in trade_orders) {
 		}
 	} else if(x.oc=='2000') {
 		//支持影票价格计算
-		if(unicode) {
-			//计算会员卡价格
-			SimpleAjax result_price = JC.internal.call(SimpleAjax, 'ticketingsys', '/incall/order/preferential', [o_id:x.order_id,unicode:unicode,pref:'100',pid:pid]);
-			queried_orders.add(result_price);
-			if(result_price&&result_price.available&&mc_data==null) {
-				mc_data = result_price.data;
-				//重置优惠系数
-				try {
-					def pref_amount = new BigDecimal(mc_data['pref_amount']);
-					def total_amount = new BigDecimal(mc_data['pay_amount']);
-					radio = (total_amount.subtract(pref_amount)).divide(total_amount,4,BigDecimal.ROUND_HALF_UP);
-					global_pref_radios['2000'] = radio;
-				}catch(any) {
-					logger.error('', any);
-				}
+		//计算会员卡价格 (已经做了扩展，支持通用价格计算)
+		SimpleAjax result_price_general = JC.internal.call(SimpleAjax, 'ticketingsys', '/incall/order/preferential', [o_id:x.order_id,unicode:unicode,pref:'100',pid:pid, ct:ct, mobile:mobile]);
+		queried_orders.add(result_price_general);
+		if(result_price_general&&result_price_general.available&&mc_data==null) {
+			mc_data = result_price_general.data;
+			//重置优惠系数
+			try {
+				def pref_amount = new BigDecimal(mc_data['pref_amount']);
+				def total_amount = new BigDecimal(mc_data['pay_amount']);
+				radio = (total_amount.subtract(pref_amount)).divide(total_amount,4,BigDecimal.ROUND_HALF_UP);
+				global_pref_radios['2000'] = radio;
+			}catch(any) {
+				logger.error('', any);
 			}
 		}
 		if(coupon_arr&&coupon_arr.get('2000')!=null) {
