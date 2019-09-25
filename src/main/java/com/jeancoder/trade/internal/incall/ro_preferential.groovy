@@ -26,10 +26,11 @@ import com.jeancoder.trade.ready.util.StringUtil
 * @param coupons : coupons;	//逗号分割
 */
 
-def tnum = JC.internal.param('tnum')?.trim();
-def unicode = JC.internal.param('unicode')?.trim();
-def ct = JC.internal.param('ct')?.trim();
-def coupons = JC.internal.param('coupons')?.trim();
+def tnum = JC.internal.param('tnum')?.toString()?.trim();
+def unicode = JC.internal.param('unicode')?.toString()?.trim();
+def ct = JC.internal.param('ct')?.toString()?.trim();
+def coupons = JC.internal.param('coupons')?.toString()?.trim();
+
 JCLogger logger = LoggerSource.getLogger(this.getClass());
 //设计好计算顺序
 println 'coupons=' + coupons;
