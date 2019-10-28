@@ -169,14 +169,6 @@ CREATE TABLE `trade_cashier_counter`  (
 ) ENGINE = InnoDB AUTO_INCREMENT = 5 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
 
 -- ----------------------------
--- Records of trade_cashier_counter
--- ----------------------------
-INSERT INTO `trade_cashier_counter` VALUES (1, '1001', '收银台1', '前台销售', 1, 1, '花果山球幕', '2019-04-22 23:40:56', '2019-04-28 18:02:41', 0, 0, '1000');
-INSERT INTO `trade_cashier_counter` VALUES (2, '1002', '收银台2', '002', 1, 1, '猴王归来', '2019-04-24 18:11:30', '2019-04-28 16:40:26', 0, 0, '1000');
-INSERT INTO `trade_cashier_counter` VALUES (3, '1003', '收银台3', '', 1, 1, '猴王归来', '2019-04-25 14:10:46', '2019-04-28 18:02:22', 0, 1, '1000');
-INSERT INTO `trade_cashier_counter` VALUES (4, '1004', '收银台4', '', 1, 1, '猴王归来', '2019-04-25 14:18:28', '2019-04-28 13:48:59', 0, 1, '1000');
-
--- ----------------------------
 -- Table structure for trade_info
 -- ----------------------------
 DROP TABLE IF EXISTS `trade_info`;
