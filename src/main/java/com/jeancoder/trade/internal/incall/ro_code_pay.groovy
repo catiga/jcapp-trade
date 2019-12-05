@@ -225,7 +225,7 @@ for(x in trade_orders) {
 		def coupon_ids = coupon_id;
 		def macu_params = [o_id:x.order_id,unicode:coupon_ids,pref:'200',op:'use',pid:pid, market_id:market_id];
 		SimpleAjax result_price = JC.internal.call(SimpleAjax, 'ticketingsys', '/incall/order/preferential', macu_params);
-		if (!StringUtil.isEmpty(coupon_ids)) {
+		if (!StringUtil.isEmpty(coupon_ids) || !market_id) {
 			if (result_price == null)  {
 				return SimpleAjax.notAvailable("运营模块通讯异常")
 			}
@@ -233,6 +233,7 @@ for(x in trade_orders) {
 				return result_price;
 			}
 		}
+		LOGGER.info('result_price='  + JackSonBeanMapper.toJson(result_price));
 		queried_orders.add(result_price);
 	} else if(x.oc=='5000') {
 		if(unicode) {
