@@ -59,6 +59,9 @@ def ap_id = JC.internal.param('ap_id');
 
 def addr_id = JC.internal.param('addr_id');
 
+//新增活动id上传
+def market_id = JC.internal.param('market_id');
+
 try {
 	ap_id = new BigInteger(ap_id);
 } catch(any) {
@@ -83,6 +86,9 @@ if(!trade.tss.startsWith('0')) {
 	ret_data.code = '-1';
 	ret_data.err_code = 'trade_status_invalid';
 	ret_data.err_code_des = '交易状态错误，请检查';
+	if(trade.tss.startsWith('9')) {
+		ret_data.err_code_des = '交易支付超时，请重新下单';
+	}
 	ret_data.text = ret_data.err_code_des;
 	return ret_data;
 }
@@ -98,7 +104,6 @@ if(supp_config==null||supp_config.partner==null) {
 	ret_data.text = ret_data.err_code_des;
 	return ret_data;
 }
-LOGGER.info('supp_config==========' + JackSonBeanMapper.toJson(supp_config));
 if(!domain) {
 	SysProjectInfo choo_proj = JC.internal.call(SysProjectInfo, 'project', '/incall/project_by_id', [pid:pid]);
 	if(choo_proj) {
@@ -138,8 +143,9 @@ if(trade.buyerid==null && ap_id!=0) {
 	trade.buyerid = ap_id;
 }
 JcTemplate.INSTANCE().update(trade);
-// 清空卡劵
-SimpleAjax clear_coupon_result = NativeUtil.connect(SimpleAjax, 'market', '/coupon/clear_coupon_info', [pid:trade.pid.toString(),orders:orders]);
+// 还原对应的名额和状态
+//SimpleAjax clear_coupon_result = NativeUtil.connect(SimpleAjax, 'market', '/coupon/clear_coupon_info', [pid:trade.pid.toString(),orders:orders]);
+SimpleAjax clear_coupon_result = JC.internal.call(SimpleAjax, 'market', '/coupon/clear_coupon_info', [pid:trade.pid.toString(),orders:orders]);
 if (clear_coupon_result == null || !clear_coupon_result.available) {
 //	def msg = clear_coupon_result == null?'清空优惠信息失败':clear_coupon_result.messages[0];
 //	return SimpleAjax.notAvailable(msg);
@@ -217,10 +223,11 @@ for(x in trade_orders) {
 			}
 		}
 		def coupon_ids = coupon_id;
-		SimpleAjax result_price = JC.internal.call(SimpleAjax, 'ticketingsys', '/incall/order/preferential', [o_id:x.order_id,unicode:coupon_ids,pref:'200',op:'use',pid:pid]);
+		def macu_params = [o_id:x.order_id,unicode:coupon_ids,pref:'200',op:'use',pid:pid, market_id:market_id];
+		SimpleAjax result_price = JC.internal.call(SimpleAjax, 'ticketingsys', '/incall/order/preferential', macu_params);
 		if (!StringUtil.isEmpty(coupon_ids)) {
 			if (result_price == null)  {
-				return SimpleAjax.notAvailable("卡劵模块通讯异常")
+				return SimpleAjax.notAvailable("运营模块通讯异常")
 			}
 			if (!result_price.available)  {
 				return result_price;
