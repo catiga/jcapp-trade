@@ -61,6 +61,7 @@ def addr_id = JC.internal.param('addr_id');
 
 //新增活动id上传
 def market_id = JC.internal.param('market_id');
+def mobile = JC.internal.param('mobile');
 
 try {
 	ap_id = new BigInteger(ap_id);
@@ -223,7 +224,7 @@ for(x in trade_orders) {
 			}
 		}
 		def coupon_ids = coupon_id;
-		def macu_params = [o_id:x.order_id,unicode:coupon_ids,pref:'200',op:'use',pid:pid, market_id:market_id];
+		def macu_params = [o_id:x.order_id,unicode:coupon_ids,pref:'200',op:'use',pid:pid, market_id:market_id, mobile:mobile, ap_id:ap_id];
 		SimpleAjax result_price = JC.internal.call(SimpleAjax, 'ticketingsys', '/incall/order/preferential', macu_params);
 		if (!StringUtil.isEmpty(coupon_ids) || !market_id) {
 			if (result_price == null)  {
