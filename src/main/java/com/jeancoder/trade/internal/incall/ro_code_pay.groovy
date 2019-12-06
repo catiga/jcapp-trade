@@ -234,7 +234,7 @@ for(x in trade_orders) {
 				return result_price;
 			}
 		}
-		LOGGER.info('result_price='  + JackSonBeanMapper.toJson(result_price));
+		LOGGER.info('mobile=' + mobile + ', result_price='  + JackSonBeanMapper.toJson(result_price));
 		queried_orders.add(result_price);
 	} else if(x.oc=='5000') {
 		if(unicode) {
