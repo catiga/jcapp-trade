@@ -3,6 +3,7 @@ package com.jeancoder.trade.internal.incall
 import com.jeancoder.app.sdk.JC
 import com.jeancoder.app.sdk.source.LoggerSource
 import com.jeancoder.core.log.JCLogger
+import com.jeancoder.core.log.JCLoggerFactory
 import com.jeancoder.core.util.JackSonBeanMapper
 import com.jeancoder.trade.ready.SimpleAjax
 import com.jeancoder.trade.ready.dto.ActOrder
@@ -38,7 +39,7 @@ if(!SSUtil.is_valid_order_type(oc)) {
 od = URLDecoder.decode(od, 'UTF-8');
 od = URLDecoder.decode(od, 'UTF-8');
 
-JCLogger logger = LoggerSource.getLogger();
+JCLogger logger = JCLoggerFactory.getLogger('');
 def o = null;
 if(oc=='1000') {
 	o = JackSonBeanMapper.fromJson(od, OrderInfo.class);
@@ -65,6 +66,7 @@ if(oc=='1000') {
 	o = JackSonBeanMapper.fromJson(od, ServiceOrder);
 } else if(oc=='3000') {
 	//活动类订单
+	logger.info('3000:' + od);
 	o = JackSonBeanMapper.fromJson(od, ActOrder);
 }
 if(o==null) {
