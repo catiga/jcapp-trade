@@ -286,7 +286,7 @@ class TradeService {
 				to.order_data = JackSonBeanMapper.toJson(buy_order);
 				to.order_id = buy_order.id;
 				to.order_num = buy_order.order_no;
-				to.oc = '5000';
+				to.oc = '3000';
 
 				to.buyerid = buy_order.ap_id;
 
@@ -556,7 +556,7 @@ class TradeService {
 				to.order_data = JackSonBeanMapper.toJson(buy_order);
 				to.order_id = buy_order.id;
 				to.order_num = buy_order.order_no;
-				to.oc = '5000';
+				to.oc = '3000';
 
 				to.buyerid = buy_order.ap_id;
 
