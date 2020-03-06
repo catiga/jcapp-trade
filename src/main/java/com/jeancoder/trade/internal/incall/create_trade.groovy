@@ -5,6 +5,7 @@ import com.jeancoder.app.sdk.source.LoggerSource
 import com.jeancoder.core.log.JCLogger
 import com.jeancoder.core.util.JackSonBeanMapper
 import com.jeancoder.trade.ready.SimpleAjax
+import com.jeancoder.trade.ready.dto.ActOrder
 import com.jeancoder.trade.ready.dto.DataTcSsReserveOrderInfo
 import com.jeancoder.trade.ready.dto.DataTcSsSaleOrderInfo
 import com.jeancoder.trade.ready.dto.McRechargeOrderDto
@@ -62,6 +63,9 @@ if(oc=='1000') {
 } else if(oc=='5000') {
 	//预约类订单
 	o = JackSonBeanMapper.fromJson(od, ServiceOrder);
+} else if(oc=='3000') {
+	//活动类订单
+	o = com.jeancoder.trade.ready.util.JackSonBeanMapper(od, ActOrder);
 }
 if(o==null) {
 	return SimpleAjax.notAvailable('order_data_empty,订单信息为空');
