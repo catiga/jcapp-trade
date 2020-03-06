@@ -7,6 +7,7 @@ import java.sql.Timestamp
 import com.jeancoder.core.util.JackSonBeanMapper
 import com.jeancoder.jdbc.JcPage
 import com.jeancoder.jdbc.JcTemplate
+import com.jeancoder.trade.ready.dto.ActOrder
 import com.jeancoder.trade.ready.dto.DataTcSsReserveOrderInfo
 import com.jeancoder.trade.ready.dto.DataTcSsSaleOrderInfo
 import com.jeancoder.trade.ready.dto.McRechargeOrderDto
@@ -275,6 +276,35 @@ class TradeService {
 				pay_amount = pay_amount.add(to.pay_amount);
 				total_handle_fee = total_handle_fee.add(to.handle_fee);
 				total_service_fee = total_service_fee.add(to.service_fee);
+			} else if(o instanceof ActOrder) {
+				//活动类订单
+				ActOrder buy_order = (ActOrder)o;
+				TradeOrder to = new TradeOrder();
+				to.a_time = new Timestamp(Calendar.getInstance().getTimeInMillis());
+				to.c_time = new Timestamp(Calendar.getInstance().getTimeInMillis());
+				to.flag = 0;
+				to.order_data = JackSonBeanMapper.toJson(buy_order);
+				to.order_id = buy_order.id;
+				to.order_num = buy_order.order_no;
+				to.oc = '5000';
+
+				to.buyerid = buy_order.ap_id;
+
+				to.total_amount = new BigDecimal(buy_order.total_amount);
+				try {
+					to.pay_amount = new BigDecimal(buy_order.pay_amount);
+				}catch(Exception e) {
+					to.pay_amount = new BigDecimal(0);
+				}
+				to.oss = trade.tss;
+				to.handle_fee = new BigDecimal(0);
+				to.service_fee = new BigDecimal(0);
+				trade_items.add(to);
+
+				total_amount = total_amount.add(to.total_amount);
+				pay_amount = pay_amount.add(to.pay_amount);
+				total_handle_fee = total_handle_fee.add(to.handle_fee);
+				total_service_fee = total_service_fee.add(to.service_fee);
 			}
 		}
 		//更新交易金额
@@ -499,6 +529,35 @@ class TradeService {
 
 				to.storeid = buy_order.store_id;
 				to.storename = buy_order.storename;
+				to.buyerid = buy_order.ap_id;
+
+				to.total_amount = new BigDecimal(buy_order.total_amount);
+				try {
+					to.pay_amount = new BigDecimal(buy_order.pay_amount);
+				}catch(Exception e) {
+					to.pay_amount = new BigDecimal(0);
+				}
+				to.oss = trade.tss;
+				to.handle_fee = new BigDecimal(0);
+				to.service_fee = new BigDecimal(0);
+				trade_items.add(to);
+
+				total_amount = total_amount.add(to.total_amount);
+				pay_amount = pay_amount.add(to.pay_amount);
+				total_handle_fee = total_handle_fee.add(to.handle_fee);
+				total_service_fee = total_service_fee.add(to.service_fee);
+			} else if(o instanceof ActOrder) {
+				//活动类订单
+				ActOrder buy_order = (ActOrder)o;
+				TradeOrder to = new TradeOrder();
+				to.a_time = new Timestamp(Calendar.getInstance().getTimeInMillis());
+				to.c_time = new Timestamp(Calendar.getInstance().getTimeInMillis());
+				to.flag = 0;
+				to.order_data = JackSonBeanMapper.toJson(buy_order);
+				to.order_id = buy_order.id;
+				to.order_num = buy_order.order_no;
+				to.oc = '5000';
+
 				to.buyerid = buy_order.ap_id;
 
 				to.total_amount = new BigDecimal(buy_order.total_amount);
