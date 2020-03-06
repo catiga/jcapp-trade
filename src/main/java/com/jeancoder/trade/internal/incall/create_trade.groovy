@@ -65,7 +65,7 @@ if(oc=='1000') {
 	o = JackSonBeanMapper.fromJson(od, ServiceOrder);
 } else if(oc=='3000') {
 	//活动类订单
-	o = com.jeancoder.trade.ready.util.JackSonBeanMapper(od, ActOrder);
+	o = JackSonBeanMapper.fromJson(od, ActOrder);
 }
 if(o==null) {
 	return SimpleAjax.notAvailable('order_data_empty,订单信息为空');
