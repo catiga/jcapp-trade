@@ -22,7 +22,7 @@ def mod_2 = FuncUtil.build(2, '系统设置', null, 'sys', 'fa-shopping-cart');
 def mod_2_1 = FuncUtil.build(201, '支付方式', 2, 'pt/index', '', 2);
 def mod_2_2 = FuncUtil.build(202, '手工折扣设置', 2, 'cashcoll/discount', '', 2);
 def mod_2_3 = FuncUtil.build(203, '交易改价设置', 2, 'cashcoll/cusprice', '', 2);
-def mod_2_4 = FuncUtil.build(201, '收款单位', 2, 'invset/index', '', 2);
+def mod_2_4 = FuncUtil.build(204, '收款单位', 2, 'invset/index', '', 2);
 
 def mod_3 = FuncUtil.build(3, '工作台管理', null, 'cashier', 'fa-money');
 def mod_3_1 = FuncUtil.build(301, '收银台设置', 3, 'cashier/index', '', 2);
