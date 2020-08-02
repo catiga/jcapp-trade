@@ -103,7 +103,7 @@
 										<thead>
 		                                    <tr>
 		                                    	<th>#</th>
-												<th>交易编号</th>
+												<th>交易信息</th>
 												<th>创建时间</th>
 												<th>订单状态</th>
 												<th>订单总价</th>
@@ -118,7 +118,10 @@
 												<td class="check-mail">
 							                        <input type="checkbox" class="i-checks blick_g" th:attr_id="${st.id}">
 							                    </td>
-												<td>[[${st.tnum }]]</td>
+												<td>
+													[[${st.tnum }]]
+													<span th:if="${st.buyerphone}"><br/>手机：[[${st.buyerphone}]]</span>
+												</td>
 												<td>[[${#dates.format(st.a_time, 'yyyy-MM-dd HH:mm:ss')}]]</td>
 												<td>
 													<span th:each="t:${all_tss}" th:if="${st.tss==t.code}" th:text="${t.name}"></span>

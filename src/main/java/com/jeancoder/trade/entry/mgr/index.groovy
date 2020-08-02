@@ -1,8 +1,8 @@
 package com.jeancoder.trade.entry.mgr
 
 import com.jeancoder.app.sdk.JC
-import com.jeancoder.app.sdk.source.LoggerSource
 import com.jeancoder.core.log.JCLogger
+import com.jeancoder.core.log.JCLoggerFactory
 import com.jeancoder.core.result.Result
 import com.jeancoder.jdbc.JcPage
 import com.jeancoder.trade.ready.SimpleAjax
@@ -18,7 +18,7 @@ def tnum = JC.request.param('tnum');
 def onum = JC.request.param('onum');
 def store = JC.request.param('store');
 def mob = JC.request.param('mob');
-JCLogger Logger = LoggerSource.getLogger("test_____")
+JCLogger Logger = JCLoggerFactory.getLogger("test_____")
 
 def pid = GlobalHolder.proj.id;
 
@@ -61,6 +61,18 @@ page.ps = 20;
 
 page = t_ser.find(page, tnum, onum, store, ss_str, third_id);
 
+if(page && page.result) {
+	for(x in page.result) {
+		//查找用户信息
+		if(x.buyerid) {
+			SimpleAjax account_info =  JC.internal.call(SimpleAjax, 'crm', '/h5/p/info_by_apid', [apid:x.buyerid]);
+			if(account_info && account_info.available) {
+				x.buyerphone = account_info.data['mobile'];
+			}
+		}
+	}
+}
+
 Result view = new Result();
 view.setView('mgr/index');
 view.addObject('page', page);
@@ -77,13 +89,10 @@ view.addObject('all_tss', all_tss);
 view.addObject('all_tss——s', "中文");
 
 //获取系统门店
-//def all_stores = RemoteUtil.connect(JcPage.class, 'project', '/incall/pure/stores', null);
 def all_stores = JC.internal.call(SimpleAjax, 'project', '/incall/pure/stores', [pid:GlobalHolder.proj.id]);
 view.addObject('all_stores', all_stores.data);
-//println "all_tss___all_stores——萨达所" + JackSonBeanMapper.toJson(all_stores)
-//System.out.print(JackSonBeanMapper.toJson(all_stores));
-//Logger.info("all_tss___all_log_"+JackSonBeanMapper.toJson(all_stores));
 //支付方式
 def supp_dics = SSUtil.findall();
 view.addObject('supp_dics', supp_dics);
 return view;
+
