@@ -133,6 +133,7 @@ class RefundService {
 		LOGGER.info('wx_pay_refund request_xml=' + request_xml);
 		
 		def ret_data = JC.remote.http_call(wx_refund_url, request_xml, cert_obj);
+		LOGGER.info('退款返回提示：');
 		LOGGER.info(ret_data);
 
 			
