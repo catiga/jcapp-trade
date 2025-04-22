@@ -17,6 +17,7 @@ GlobalHolder.setProj(project);
 req.setAttribute("current_project", project)
 
 //req.setAttribute('pub_bucket', 'https://cdn.iplaysky.com/static/');
-req.setAttribute('pub_bucket', 'http://static.jcloudapp.chinaren.xyz/static/')
+//req.setAttribute('pub_bucket', 'http://static.jcloudapp.chinaren.xyz/static/')
+req.setAttribute('pub_bucket', 'https://static.hash.bid/static/')
 
 return true;
