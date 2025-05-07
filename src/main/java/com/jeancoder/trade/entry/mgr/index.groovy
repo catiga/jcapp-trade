@@ -66,7 +66,7 @@ if(page && page.result) {
 		//查找用户信息
 		if(x.buyerid) {
 			SimpleAjax account_info =  JC.internal.call(SimpleAjax, 'crm', '/h5/p/info_by_apid', [apid:x.buyerid]);
-			if(account_info && account_info.available) {
+			if(account_info && account_info.available && account_info.data) {
 				x.buyerphone = account_info.data['mobile'];
 			}
 		}
