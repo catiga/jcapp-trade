@@ -127,7 +127,7 @@ for(x in trade_orders) {
 			queried_orders.add(result_price);
 		}
 	} else if(x.oc=='2000') {
-		logger.info("start to fetch movie coupon {}, {}", coupon_ids, JackSonBeanMapper.toJson(coupon_arr))
+		logger.info("start to fetch movie coupon {}", JackSonBeanMapper.toJson(coupon_arr))
 		//支持影票价格计算
 		//计算会员卡价格 (已经做了扩展，支持通用价格计算)
 		SimpleAjax result_price_general = JC.internal.call(SimpleAjax, 'ticketingsys', '/incall/order/preferential', [o_id:x.order_id,unicode:unicode,pref:'100',pid:pid, ct:ct, mobile:mobile]);
