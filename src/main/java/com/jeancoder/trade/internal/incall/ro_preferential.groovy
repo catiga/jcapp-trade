@@ -1,20 +1,15 @@
 package com.jeancoder.trade.internal.incall
 
 import com.jeancoder.app.sdk.JC
-import com.jeancoder.app.sdk.source.LoggerSource
 import com.jeancoder.core.log.JCLogger
 import com.jeancoder.core.log.JCLoggerFactory
 import com.jeancoder.jdbc.JcTemplate
 import com.jeancoder.trade.ready.SimpleAjax
-import com.jeancoder.trade.ready.counterperm.AllowCusPrice
-import com.jeancoder.trade.ready.dto.PrepData
-import com.jeancoder.trade.ready.entity.CollectSetting
 import com.jeancoder.trade.ready.entity.TradeInfo
 import com.jeancoder.trade.ready.entity.TradeOrder
 import com.jeancoder.trade.ready.entity.TradePreferential
 import com.jeancoder.trade.ready.ser.TradeService
 import com.jeancoder.trade.ready.util.JackSonBeanMapper
-import com.jeancoder.trade.ready.util.RemoteUtil
 import com.jeancoder.trade.ready.util.StringUtil
 
 /**
@@ -33,7 +28,7 @@ def coupons = JC.internal.param('coupons')?.toString()?.trim();
 
 def mobile = JC.internal.param('mobile')?.toString()?.trim();
 
-JCLogger logger = LoggerSource.getLogger(this.getClass());
+JCLogger logger = JCLoggerFactory.getLogger(this.getClass());
 //设计好计算顺序
 println 'coupons=' + coupons;
 println 'ct=' + ct;
@@ -132,6 +127,7 @@ for(x in trade_orders) {
 			queried_orders.add(result_price);
 		}
 	} else if(x.oc=='2000') {
+		logger.info("start to fetch movie coupon {}, {}", coupon_ids, JackSonBeanMapper.toJson(coupon_arr))
 		//支持影票价格计算
 		//计算会员卡价格 (已经做了扩展，支持通用价格计算)
 		SimpleAjax result_price_general = JC.internal.call(SimpleAjax, 'ticketingsys', '/incall/order/preferential', [o_id:x.order_id,unicode:unicode,pref:'100',pid:pid, ct:ct, mobile:mobile]);
