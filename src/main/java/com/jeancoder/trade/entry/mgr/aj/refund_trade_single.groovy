@@ -93,7 +93,7 @@ if(ret_data.code=='0') {
 	return SimpleAjax.available('', ret_data);
 }
 
-return SimpleAjax.notAvailable('', ret_data);
+return SimpleAjax.notAvailable(ret_data.text, ret_data);
 
 
 

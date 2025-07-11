@@ -143,7 +143,7 @@ class RefundService {
 			String return_code = ret_map.get('return_code');
 			String return_msg = ret_map.get('return_msg');
 			String result_code = ret_map.get('result_code');
-			
+
 			if(return_code=='SUCCESS'&&result_code=='SUCCESS') {
 				//退款成功
 				def pay_data_map = [:];
@@ -164,7 +164,8 @@ class RefundService {
 			
 			String err_code = ret_map.get('err_code');
 			String err_code_desc = ret_map.get('err_code_des');
-			
+
+			pay_result.code = "fail";
 			pay_result.text = return_msg + return_code;
 			pay_result.err_code = err_code;
 			pay_result.err_code_des = err_code_desc;
