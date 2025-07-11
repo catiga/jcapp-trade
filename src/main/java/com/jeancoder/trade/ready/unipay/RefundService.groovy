@@ -93,7 +93,7 @@ class RefundService {
 		String cert_file = config.rb_file;
 		String cert_pass = config.rb_kp;
 		String cert_type = config.rb_key_format;
-		LOGGER.info("cert type: ", cert_type, " cert_passwd: ", cert_pass, " cert file path: ", cert_file)
+		LOGGER.info("cert type: " + cert_type + " cert_passwd: " + cert_pass + " cert file path: " + cert_file)
 		RequestCert cert_obj = new RequestCert(cert_type:cert_type,cert_passwd:cert_pass,cert_file_path:cert_file);
 		
 		String app_id = data.get("app_id");
@@ -131,7 +131,7 @@ class RefundService {
 		
 		LOGGER.info('wx_pay_refund request_xml: {}' + request_xml);
 
-		LOGGER.info("wx_refund_url: ", wx_refund_url)
+		LOGGER.info("wx_refund_url: {}", wx_refund_url)
 		def ret_data = JC.remote.http_call(wx_refund_url, request_xml, cert_obj);
 		LOGGER.info('退款返回提示：{}', ret_data);
 			
