@@ -2,7 +2,6 @@ package com.jeancoder.trade.ready.unipay
 
 import com.jeancoder.app.sdk.JC
 import com.jeancoder.app.sdk.remote.RequestCert
-import com.jeancoder.app.sdk.source.LoggerSource
 import com.jeancoder.core.log.JCLogger
 import com.jeancoder.core.log.JCLoggerFactory
 import com.jeancoder.trade.ready.dto.PayResult
@@ -11,7 +10,6 @@ import com.jeancoder.trade.ready.dto.TradeResult
 import com.jeancoder.trade.ready.entity.TradeInfo
 import com.jeancoder.trade.ready.entity.TradePayInfo
 import com.jeancoder.trade.ready.ser.TradeService
-import com.jeancoder.trade.ready.util.AlipayResponse
 import com.jeancoder.trade.ready.util.AlipayUtil
 import com.jeancoder.trade.ready.util.DateUtil
 import com.jeancoder.trade.ready.util.JackSonBeanMapper
@@ -20,7 +18,7 @@ import com.jeancoder.trade.ready.util.XMLUtil
 
 class RefundService {
 
-	JCLogger LOGGER = LoggerSource.getLogger(RefundService.class.getName());
+	JCLogger LOGGER = JCLoggerFactory.getLogger(RefundService.class.getName());
 	
 	static final RefundService _instance_ = new RefundService();
 	
@@ -130,12 +128,10 @@ class RefundService {
 		XMLUtil xml_util = new XMLUtil();
 		def request_xml = xml_util.to_xml(param);
 		
-		LOGGER.info('wx_pay_refund request_xml=' + request_xml);
+		LOGGER.info('wx_pay_refund request_xml: {}' + request_xml);
 		
 		def ret_data = JC.remote.http_call(wx_refund_url, request_xml, cert_obj);
-		LOGGER.info('退款返回提示：');
-		LOGGER.info(ret_data);
-
+		LOGGER.info('退款返回提示：{}', ret_data);
 			
 		try {
 			Map<String, String> ret_map = xml_util.to_map(ret_data);
