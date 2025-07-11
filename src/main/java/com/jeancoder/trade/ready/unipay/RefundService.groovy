@@ -77,7 +77,7 @@ class RefundService {
 		pay_result.text = '退款成功';
 		
 		def wx_refund_url = 'https://api.mch.weixin.qq.com/secapi/pay/refund';
-		def refund_notify_url = 'http://' + other_param.get('domain')+'/trade/outcall/wxpay/refund_notify';
+		def refund_notify_url = 'https://' + other_param.get('domain')+'/trade/outcall/wxpay/refund_notify';
 		
 		def out_trade_refund_no = '950' + trade.tnum.substring(2);
 		def data = [:];
@@ -93,6 +93,7 @@ class RefundService {
 		String cert_file = config.rb_file;
 		String cert_pass = config.rb_kp;
 		String cert_type = config.rb_key_format;
+		LOGGER.info("cert type: ", cert_type, " cert_passwd: ", cert_pass, " cert file path: ", cert_file)
 		RequestCert cert_obj = new RequestCert(cert_type:cert_type,cert_passwd:cert_pass,cert_file_path:cert_file);
 		
 		String app_id = data.get("app_id");
@@ -129,7 +130,8 @@ class RefundService {
 		def request_xml = xml_util.to_xml(param);
 		
 		LOGGER.info('wx_pay_refund request_xml: {}' + request_xml);
-		
+
+		LOGGER.info("wx_refund_url: ", wx_refund_url)
 		def ret_data = JC.remote.http_call(wx_refund_url, request_xml, cert_obj);
 		LOGGER.info('退款返回提示：{}', ret_data);
 			
