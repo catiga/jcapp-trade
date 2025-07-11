@@ -134,12 +134,11 @@ class RefundService {
 
 		LOGGER.info("wx_refund_url: {}", wx_refund_url)
 		//def ret_data = JC.remote.http_call(wx_refund_url, request_xml, cert_obj);
-			
-		try {
-			HCResp hresp = JC.remote.http_call_stream(wx_refund_url, request_xml, cert_obj);
-			def ret_data = new String(hresp.getContent(), "utf-8")
-			LOGGER.info('退款返回提示：{}', ret_data);
 
+		def ret_data = WxRefundRequestSender.sendRefundRequest(
+				wx_refund_url, request_xml, cert_obj.cert_file_path, cert_obj.cert_passwd)
+		LOGGER.info('退款返回提示：{}', ret_data);
+		try {
 			Map<String, String> ret_map = xml_util.to_map(ret_data);
 			String return_code = ret_map.get('return_code');
 			String return_msg = ret_map.get('return_msg');
